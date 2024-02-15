@@ -1,0 +1,23 @@
+.loginBtn {
+    border-radius: 5px;
+}
+
+.container {
+    font-size: 10px;
+    font-weight: lighter;
+    font-family: 'Quicksand', sans-serif;
+}
+
+.inputBox {
+    width: 100%;
+    height: 30px;
+    border:2px;    /* Set border radius to 0 by default */
+}
+.Forms {
+  height: 100%;
+}
+
+
+
+
+  

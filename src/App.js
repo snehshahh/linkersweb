@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import LoginSignUp from './LoginSignUp';
+import Dashboard from './Dashboard';
+import SharedLinkPage from './SharedLinkPage'
+import SharedCollectionPage from './SharedCollectionPage'
+import './App.css'
 
 function App() {
+  const [cookies, setCookie] = useCookies(['userId']);
+  useEffect(() => {
+    const userIdCookie = cookies.userId;
+    console.log("userIdCookie:", userIdCookie);
+  }, [cookies]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={cookies?.userId ? <Navigate to="/Dashboard" /> : <Navigate to="/LoginSignUp" />}
+        />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/LoginSignUp" element={<LoginSignUp />} />
+        <Route path="/SharedLinkPage/:linkId" element={<SharedLinkPage />} />
+        <Route path="/SharedLinkPage/:linkId/LoginSignUp" element={<LoginSignUp />} />
+        <Route path="/SharedCollectionPage/:collectionId" element={<SharedCollectionPage />} />
+        <Route path="/SharedCollectionPage/:collectionId/LoginSignUp" element={<LoginSignUp />} />
+      </Routes>
+    </Router>
   );
 }
 
