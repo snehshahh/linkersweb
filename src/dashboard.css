@@ -97,6 +97,8 @@ input{
     padding: 0;
     display: flex;
     justify-content: space-between;
+    border-bottom: none; /* Add this line to remove the bottom border */
+
   }
   
   .tab-list li {
@@ -122,7 +124,6 @@ input{
   .button-container{
     display:flex;
     justify-content: space-between;
-    margin-right:32%;
   }
   /* Add this to your CSS for styling the navigation input */
 .navigation-input {

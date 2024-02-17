@@ -9,21 +9,22 @@ import './dashboard.css'; // Import your CSS file for styling
 import { useCookies } from 'react-cookie';
 import { BeatLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamation, faShare, faTrash, faPen, faCheck, faBookmark, faTimes, faPlus, faExternalLinkAlt, faClock, faListSquares, faPowerOff, faMinus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faExclamation, faShare, faTrash, faPen, faCheck, faBookmark, faTimes, faPlus, faBoxOpen, faExternalLinkAlt, faFileAlt, faQuestionCircle, faClock, faListSquares, faPowerOff, faMinus, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 
 const Dashboard = () => {
 
   //#region Friebase Config
+  const navigate = useNavigate(); // Change 'history' to 'navigate'
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBaFxFtY1MUEVywG0GEjEflxa4L4PkE4qA",
-  authDomain: "linkersdb-firestore.firebaseapp.com",
-  projectId: "linkersdb-firestore",
-  storageBucket: "linkersdb-firestore.appspot.com",
-  messagingSenderId: "948306998721",
-  appId: "1:948306998721:web:001b9c324a55eb77dcab40"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyBaFxFtY1MUEVywG0GEjEflxa4L4PkE4qA",
+    authDomain: "linkersdb-firestore.firebaseapp.com",
+    projectId: "linkersdb-firestore",
+    storageBucket: "linkersdb-firestore.appspot.com",
+    messagingSenderId: "948306998721",
+    appId: "1:948306998721:web:001b9c324a55eb77dcab40"
+  };
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app); // Get the Firestore instance
@@ -58,9 +59,9 @@ const firebaseConfig = {
   const fetchData = async (userId, db, linkType, setLoading, setLinksFunction) => {
     if (userId !== undefined) {
       setLoading(true);
-    var today = new Date();
-    var startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    var endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      var today = new Date();
+      var startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      var endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
       let q;
 
       if (linkType === 'all') {
@@ -87,9 +88,12 @@ const firebaseConfig = {
         setLinksFunction(linksData);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching links:', error);
+        alert('Error fetching links:', error);
         setLoading(false);
       }
+    }
+    else {
+      navigate('../LoginSignUp');
     }
   };
   // Inside your component
@@ -114,7 +118,7 @@ const firebaseConfig = {
           });
           setCollections(collectionsData);
         } catch (error) {
-          console.error('Error fetching collections:', error);
+          alert('Error fetching collections:', error);
         }
       };
 
@@ -140,7 +144,7 @@ const firebaseConfig = {
 
     } catch (error) {
       // Handle errors, e.g., log them or show a notification to the user
-      console.error("Error deleting document:", error);
+      alert("Error deleting document:", error);
     }
   };
   const handleImportantDelete = async (id) => {
@@ -183,7 +187,7 @@ const firebaseConfig = {
 
     } catch (error) {
       // Handle errors, e.g., log them or show a notification to the user
-      console.error("Error deleting document:", error);
+      alert("Error deleting document:", error);
     }
   };
   const handleDeleteFromAll = async (id) => {
@@ -207,7 +211,7 @@ const firebaseConfig = {
         }
       }
     } catch (error) {
-      console.error("Error deleting link:", error);
+      alert("Error deleting link:", error);
     }
   };
   //#endregion
@@ -274,7 +278,7 @@ const firebaseConfig = {
 
         console.log(`Update clicked for ID: ${linkId}`);
       } catch (error) {
-        console.error('Error updating links:', error);
+        alert('Error updating links:', error);
       }
     };
 
@@ -387,7 +391,7 @@ const firebaseConfig = {
           )
         );
       } catch (error) {
-        console.error('Error updating links:', error);
+        alert('Error updating links:', error);
       }
     };
 
@@ -418,7 +422,7 @@ const firebaseConfig = {
         setNewCollectionName('');
         setShowAddCollection(false);
       } catch (error) {
-        console.error('Error adding collection:', error);
+        alert('Error adding collection:', error);
       }
     }
   };
@@ -426,6 +430,7 @@ const firebaseConfig = {
   const [showLinksForCollection, setShowLinksForCollection] = useState(null);
   // Function to fetch tlinks documents for a specific collection
   const fetchTlinksForCollection = async (collectionId) => {
+    setTlinks([]);
     const q = query(collection(db, "tlinks"), where("user_id", "==", userId), where("collection_id", "==", collectionId));
     try {
       const querySnapshot = await getDocs(q);
@@ -436,20 +441,14 @@ const firebaseConfig = {
       });
       setTlinks(linksData);
     } catch (error) {
-      console.error('Error fetching links:', error);
+      alert('Error fetching links:', error);
     }
   };
 
   // Function to handle showing links for a specific collection
   const handleShowLinks = (collectionId) => {
-    if (showLinksForCollection === collectionId) {
-      // If already showing links, hide them
-      setShowLinksForCollection(null);
-    } else {
-      // If not showing links, fetch and display them
-      setShowLinksForCollection(collectionId);
-      fetchTlinksForCollection(collectionId);
-    }
+    setShowLinksForCollection((prev) => (prev === collectionId ? null : collectionId));
+    fetchTlinksForCollection(collectionId);
   };
 
 
@@ -500,7 +499,7 @@ const firebaseConfig = {
         );
         console.log(`Update clicked for ID: ${linkId}`);
       } catch (error) {
-        console.error('Error updating links:', error);
+        alert('Error updating links:', error);
       }
     };
     updateLinks();
@@ -516,7 +515,7 @@ const firebaseConfig = {
 
     } catch (error) {
       // Handle errors, e.g., log them or show a notification to the user
-      console.error("Error deleting document:", error);
+      alert("Error deleting document:", error);
     }
   };
 
@@ -557,7 +556,7 @@ const firebaseConfig = {
 
         console.log(`Update clicked for ID: ${linkId}`);
       } catch (error) {
-        console.error('Error updating links:', error);
+        alert('Error updating links:', error);
       }
 
     };
@@ -598,7 +597,7 @@ const firebaseConfig = {
               });
               importntsetLinks(implinksData);
             } catch (error) {
-              console.error('Error fetching links:', error);
+              alert('Error fetching links:', error);
             }
           };
 
@@ -629,7 +628,7 @@ const firebaseConfig = {
 
         console.log(`Update clicked for ID: ${linkId}`);
       } catch (error) {
-        console.error('Error updating links:', error);
+        alert('Error updating links:', error);
       }
     };
     const fetchimportantLinks = async () => {
@@ -644,7 +643,7 @@ const firebaseConfig = {
         });
         importntsetLinks(implinksData);
       } catch (error) {
-        console.error('Error fetching links:', error);
+        alert('Error fetching links:', error);
       }
     };
 
@@ -663,7 +662,7 @@ const firebaseConfig = {
     tempTextArea.select();
     document.execCommand('copy');
     document.body.removeChild(tempTextArea);
-    alert("Copied To ClipBoard!");
+    alert("Copied To Clipboard!");
     // Optionally, you can provide user feedback or notifications about the successful copy
   };
 
@@ -691,56 +690,130 @@ const firebaseConfig = {
   const filteredRecentLinks = recentlinks.filter((link) =>
     link.data.note.toLowerCase().includes(searchRecentlink.toLowerCase())
   );
-  const filteredImportant = recentlinks.filter((link) =>
+  const filteredImportant = importantlinks.filter((link) =>
     link.data.note.toLowerCase().includes(searchImplink.toLowerCase())
   );
   const toggleSearchVisibility = () => {
     setIsSearchRecentVisible(!isSearchRecentVisible);
   };
-  const navigate = useNavigate(); // Change 'history' to 'navigate'
   const handleLogOut = () => {
     localStorage.setItem('userId', '');
     navigate('../LoginSignUp')
   };
   //#endregion
+  const [url, setUrl] = useState('');
+  const [note, setNote] = useState('');
+
+  const handleSave = async () => {
+    const startOfToday = new Date();
+    const response = await addDoc(collection(db, "tlinks"), {
+      "boolImp": false,
+      "collection_id": null,
+      "createDate": startOfToday,
+      "note": note,
+      "updateDate": startOfToday,
+      "url": url,
+      "user_id": userId
+    });
+    if (response.id) {
+      console.log("Added Manually");
+      window.location.reload();
+    }
+  };
 
   return (
     <div className="dashboard-container">
       <div className='col-md-12' style={{ margin: '0px auto 0px auto' }}>
-        <button className="btn mb-3 pr-5 mr-5" style={{ marginLeft: '45%' }} onClick={handleLogOut} >
-          <FontAwesomeIcon icon={faPowerOff} />
-        </button>
+        <div className='button-container'>
+          <div></div>
+          <div>
+            <button className="btn mb-3 pr-5 mr-5" onClick={handleLogOut}>
+              <FontAwesomeIcon icon={faPowerOff} />
+            </button>
+          </div>
+          <div></div>
+        </div>
       </div>
+      <div className='col-md-12' style={{ margin: '0px auto 20px auto' }}>
+        <div className='button-container'>
+          <div></div>
+          <div>
+            <Popup
+              trigger={
+                <button className={`btn`}>
+                  Add a link
+                </button>
+              }
+              modal
+              nested
+            >
+              {(close) => (
+                <div className="link-popup text-align-center" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px' }}>
+                  <h3>Add URL and Notes</h3>
+                  <div className="row justify-content-center">
+                    <div className="col-md-8">
+                      <input
+                        type="text"
+                        placeholder="URL"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        className="form-control mb-2"
+                      />
+                      <textarea
+                        placeholder="Notes"
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
+                        className="form-control mb-2"
+                      ></textarea>
+                      <div className="text-center">
+                        <button className="btn" onClick={handleSave}>Save</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row justify-content-center mt-3">
+                    <div className="col-md-8 text-center">
+                      <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} /></button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Popup>
+          </div>
+          <div></div>
+        </div>
+      </div>
+
       <nav>
-        <ul className="tab-list">
+        <ul className="nav nav-tabs tab-list">
           <li
-            className={selectedTab === 'tab1' ? 'active' : ''}
+            className={`nav-item tab-item ${selectedTab === 'tab1' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab1')}
           >
-            <FontAwesomeIcon icon={faClock} style={{ color: 'black', padding: '0 0 5px 20px', height: '18px' }} />
+            <FontAwesomeIcon icon={faClock} className="nav-link" style={{ color: 'black', padding: '0 0 5px 20px', height: '18px' }} />
           </li>
           <li
-            className={selectedTab === 'tab2' ? 'active' : ''}
+            className={`nav-item tab-item ${selectedTab === 'tab2' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab2')}
           >
-            <FontAwesomeIcon icon={faExclamation} style={{ color: 'black', padding: '0 0 5px 28px', height: '19px' }} />
+            <FontAwesomeIcon icon={faExclamation} className="nav-link" style={{ color: 'black', padding: '0 0 5px 28px', height: '19px' }} />
           </li>
           <li
-            className={selectedTab === 'tab3' ? 'active' : ''}
+            className={`nav-item tab-item ${selectedTab === 'tab3' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab3')}
           >
-            <FontAwesomeIcon icon={faListSquares} style={{ color: 'black', padding: '0 0 5px 20px' }} />
+            <FontAwesomeIcon icon={faListSquares} className="nav-link" style={{ color: 'black', padding: '0 0 5px 20px' }} />
           </li>
           <li
-            className={selectedTab === 'tab4' ? 'active' : ''}
+            className={`nav-item tab-item ${selectedTab === 'tab4' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab4')}
           >
-            <FontAwesomeIcon icon={faBookmark} style={{ color: 'black', padding: '0 0 5px 23px' }} />
+            <FontAwesomeIcon icon={faBookmark} className="nav-link" style={{ color: 'black', padding: '0 0 5px 23px' }} />
           </li>
         </ul>
+
       </nav>
 
-      <div className="tab-content">
+      <div className="tab-content mt-3">
         <div className={`tab-content ${selectedTab === 'tab1' ? 'fade-in' : 'fade-out'}`}>
           {selectedTab === 'tab1' && (
             <div>
@@ -754,8 +827,9 @@ const firebaseConfig = {
                   </button>
                 </div>
               </div>
-              <div>
-                <div className={`col-md-9 search-container ${isSearchRecentVisible ? 'show' : 'hide'}`}>
+              <div className='d-flex justify-content-between'>
+                <div></div>
+                <div style={{ margin: '0px' }} className={`col-md-9 search-container ${isSearchRecentVisible ? 'show' : 'hide'}`}>
                   <input
                     type="text"
                     className="form-control mb-3 navigation-input"
@@ -764,6 +838,8 @@ const firebaseConfig = {
                     onChange={(e) => setSearchRecentLink(e.target.value)}
                   />
                 </div>
+                <div></div>
+
               </div>
               <div style={{
                 marginTop: isSearchRecentVisible ? '0' : '-80px',
@@ -771,124 +847,142 @@ const firebaseConfig = {
               }}>
                 {searchRecentlink === '' ? (
                   // If there's no search query, render all links
-                  recentlinks.map((link) => (
-                    <div
-                      key={link.id}
-                      className="mb-3"
-                      onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
-                      onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
-                    >
-                      <hr
-                        style={{
-                          width: '100px',
-                          margin: '20px auto 30px auto',
-                          height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
-                          backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
-                          transition: 'height 0.3s ease' /* Add transition for height property */
+                  recentlinks.length > 0 ? (
+                    recentlinks.map((link) => (
+                      <div
+                        key={link.id}
+                        className="mb-3"
+                        onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
+                        onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
+                      >
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 30px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
 
-                        }} />
+                          }} />
 
-                      {editMode && link.id === linkId ? (
-                        <div className="mb-2">
-                          <label className="form-label">Edit Note:</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={editedNote}
-                            onChange={(e) => setEditedNote(e.target.value)}
-                          />
+                        {editMode && link.id === linkId ? (
+                          <div className="mb-2">
+                            <label className="form-label"></label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={editedNote}
+                              onChange={(e) => setEditedNote(e.target.value)}
+                            />
+                          </div>
+                        ) : (
+                          <div className="mb-2">
+                            <input type="text" className="form-control mb-3" value={link.data.note} readOnly />
+                          </div>
+                        )}
+                        <div className="input-group d-flex mb-3">
+                          <input type="text" className="form-control" value={link.data.url} readOnly />
+                          <div className="input-group-append pl-5">
+                            <a
+                              href={link.data.url}
+                              className="btn btn-outline-secondary "
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
+                            </a>
+                          </div>
                         </div>
-                      ) : (
-                        <div className="mb-2">
-                          <input type="text" className="form-control mb-3" value={link.data.note} readOnly />
-                        </div>
-                      )}
-                      <div className="input-group d-flex mb-3">
-                        <input type="text" className="form-control" value={link.data.url} readOnly />
-                        <div className="input-group-append pl-5">
-                          <a
-                            href={link.data.url}
-                            className="btn btn-outline-secondary "
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
-                          </a>
-                        </div>
-                      </div>
-                      <div className="button-container">
-                        <div></div> {/* Added wrapper div */}
-                        <div>
+                        <div className="button-container">
+                          <div></div> {/* Added wrapper div */}
+                          <div>
 
-                          <button className="btn  me-2" title="Delete" onClick={() => handleDeleteFromAll(link.id)}>
-                            <FontAwesomeIcon icon={faTrash} />
+                            <button className="btn  me-2" title="Delete" onClick={() => handleDeleteFromAll(link.id)}>
+                              <FontAwesomeIcon icon={faTrash} />
 
-                          </button>
-                          <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
-                            <FontAwesomeIcon icon={faShare} />
-                          </button>
-                          <button className="btn me-2" title="Edit" onClick={() => handleRecentUpdateClick(link.id)}>
-                            <FontAwesomeIcon icon={faPen} />
-                          </button>
-                          {link.data.collection_id != null ? (
-                            <button
-                              className="btn"
-                              onClick={() => handleRemoveFromCollection(link.id, link.data.collection_id)}
-                              title="Remove From Collection"
-                            >    <FontAwesomeIcon icon={faBookmark} title="Remove From Collection" style={{ color: 'green' }} />
                             </button>
-                          ) : (
-                            <Popup trigger={
-                              <button className={`btn`} onClick={(e) => e.preventDefault()}>
-                                <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
+                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
+                              <FontAwesomeIcon icon={faShare} />
+                            </button>
+                            <button className="btn me-2" title="Edit" onClick={() => handleRecentUpdateClick(link.id)}>
+                              <FontAwesomeIcon icon={faPen} />
+                            </button>
+                            {link.data.collection_id != null ? (
+                              <button
+                                className="btn"
+                                onClick={() => handleRemoveFromCollection(link.id, link.data.collection_id)}
+                                title="Remove From Collection"
+                              >    <FontAwesomeIcon icon={faBookmark} title="Remove From Collection" style={{ color: 'green' }} />
                               </button>
-                            } modal>
-                              {(close) => (
-                                <div className="link-popup text-align-center">
-                                  <h3>Select a Collection</h3>
-                                  <ul className="list-unstyled" style={{ marginLeft: '10%' }}>
-                                    {collections.map((collection) => (
-                                      <li key={collection.id} className="m-2">
-                                        <button
-                                          className="btn btn-outline"
-                                          style={{ textAlign: 'center' }}
-                                          onClick={() => {
-                                            handleAddToCollection(link.id);
-                                            handleSelectCollection(collection.id, link.id);
-                                            close(); // Close the popup after selecting a collection
-                                          }}
-                                          onMouseEnter={(e) => e.target.classList.add('border-black')}
-                                          onMouseLeave={(e) => e.target.classList.remove('border-black')}
-                                        >
-                                          {collection.data.collection_title}
+                            ) : (
+                              <Popup trigger={
+                                <button className={`btn`} onClick={(e) => e.preventDefault()}>
+                                  <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
+                                </button>
+                              } modal>
+                                {(close) => (
+                                  <div className="link-popup">
+                                    <h3>Select a Collection</h3>
+                                    <ul className="list-unstyled">
+                                      {collections.map((collection) => (
+                                        <li key={collection.id} className="m-2">
+                                          <button
+                                            className="btn btn-outline"
+                                            onClick={() => {
+                                              handleAddToCollection(link.id);
+                                              handleSelectCollection(collection.id, link.id);
+                                              close(); // Close the popup after selecting a collection
+                                            }}
+                                            onMouseEnter={(e) => e.target.classList.add('border-black')}
+                                            onMouseLeave={(e) => e.target.classList.remove('border-black')}
+                                          >
+                                            <a href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                              {collection.data.collection_title}
+                                            </a>
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                    <div className="row justify-content-center mt-3">
+                                      <div className="col-md-8 text-center">
+                                        <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
                                         </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  <button className="btn" style={{ marginLeft: '40%' }} onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                  </button>
-                                </div>
-                              )}
-                            </Popup>
-                          )}
-                          {editMode && link.id === linkId && (
-                            <button className="btn" onClick={() => handleAllSaveUpdate(link.id)}>
-                              <FontAwesomeIcon icon={faCheck} />
-                            </button>
-                          )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </Popup>
+
+                            )}
+                            {editMode && link.id === linkId && (
+                              <button className="btn" onClick={() => handleAllSaveUpdate(link.id)}>
+                                <FontAwesomeIcon icon={faCheck} />
+                              </button>
+                            )}
+                          </div>
+                          <div></div> {/* Added wrapper div */}
+                        </div>
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 30px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />                    </div>
+
+                    ))
+                  ) : (
+                    <div className="container mt-5">
+                      <div className="row justify-content-center">
+                        <div className="text-muted d-flex  align-items-center">
+                          <h5 className="mt-3">No Recent Links</h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                          <FontAwesomeIcon icon={faBoxOpen} style={{ color: 'black', fontSize: '1.2rem' }} className='mt-2' />
                         </div>
                       </div>
-                      <hr
-                        style={{
-                          width: '100px',
-                          margin: '20px auto 30px auto',
-                          height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
-                          backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
-                          transition: 'height 0.3s ease' /* Add transition for height property */
+                    </div>)
 
-                        }} />                    </div>
-
-                  ))
                 ) : (
                   // If there is a search query, render only filtered links
                   filteredRecentLinks.length > 0 ? (
@@ -911,7 +1005,7 @@ const firebaseConfig = {
 
                         {editMode && link.id === linkId ? (
                           <div className="mb-2">
-                            <label className="form-label">Edit note:</label>
+                            <label className="form-label"></label>
                             <input
                               type="text"
                               className="form-control"
@@ -921,7 +1015,7 @@ const firebaseConfig = {
                           </div>
                         ) : (
                           <div className="mb-2">
-                            <label className="form-label">note:</label>
+                            <label className="form-label"></label>
                             <input type="text" className="form-control" value={link.data.note} readOnly />
                           </div>
                         )}
@@ -939,13 +1033,13 @@ const firebaseConfig = {
                           </div>
                         </div>
                         <div className="button-container">
-                          <div></div> {/* Added wrapper div */}
+                          <div></div>
                           <div>
                             <button className="btn  me-2" title="Delete" onClick={() => handleRecentDelete(link.id)}>
                               <FontAwesomeIcon icon={faTrash} />
 
                             </button>
-                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
+                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
                               <FontAwesomeIcon icon={faShare} />
                             </button>
                             <button className="btn me-2" title="Edit" onClick={() => handleRecentUpdateClick(link.id)}>
@@ -965,9 +1059,9 @@ const firebaseConfig = {
                                 </button>
                               } modal>
                                 {(close) => (
-                                  <div className="link-popup text-align-center">
+                                  <div className="link-popup">
                                     <h3>Select a Collection</h3>
-                                    <ul className="list-unstyled" style={{ marginLeft: '10%' }}>
+                                    <ul className="list-unstyled">
                                       {collections.map((collection) => (
                                         <li key={collection.id} className="m-2">
                                           <button
@@ -986,8 +1080,12 @@ const firebaseConfig = {
                                         </li>
                                       ))}
                                     </ul>
-                                    <button className="btn" style={{ marginLeft: '40%' }} onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                    </button>
+                                    <div className="row justify-content-center mt-3">
+                                      <div className="col-md-8 text-center">
+                                        <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
+                                        </button>
+                                      </div>
+                                    </div>
                                   </div>
                                 )}
                               </Popup>
@@ -998,6 +1096,8 @@ const firebaseConfig = {
                               </button>
                             )}
                           </div>
+                          <div></div>
+
                         </div>
                         <hr
                           style={{
@@ -1031,8 +1131,10 @@ const firebaseConfig = {
                   </button>
                 </div>
               </div>
-              <div>
-                <div className={`col-md-9 search-container ${isSearchRecentVisible ? 'show' : 'hide'}`}>
+              <div className='d-flex justify-content-between'>
+                <div></div>
+
+                <div style={{ margin: '0px' }} className={`col-md-9 search-container ${isSearchRecentVisible ? 'show' : 'hide'}`}>
                   <input
                     type="text"
                     className="form-control mb-3 navigation-input" // Add a class for styling
@@ -1041,6 +1143,8 @@ const firebaseConfig = {
                     onChange={(e) => setImpSearchLink(e.target.value)}
                   />
                 </div>
+                <div></div>
+
               </div>
               <div style={{
                 marginTop: isSearchRecentVisible ? '0' : '-80px',
@@ -1048,121 +1152,26 @@ const firebaseConfig = {
               }}>
                 {searchImplink === '' ? (
                   // If there's no search query, render all links
-                  importantlinks.map((link) => (
-                    <div
-                      key={link.id}
-                      className="mb-3 overflow-hidden"
-                      onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
-                      onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
-                    >
-                      <hr
-                        style={{
-                          width: '100px',
-                          margin: '20px auto 30px auto',
-                          height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
-                          backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
-                          transition: 'height 0.3s ease' /* Add transition for height property */
+                  importantlinks.length > 0 ? (
+                    importantlinks.map((link) => (
+                      <div
+                        key={link.id}
+                        className="mb-3 overflow-hidden"
+                        onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
+                        onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
+                      >
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 30px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
 
-                        }} />
-                      {editMode && link.id === linkId ? (
-                        <div className="mb-2">
-                          <label className="form-label">Edit Note:</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={editedNote}
-                            onChange={(e) => setEditedNote(e.target.value)}
-                          />
-                        </div>
-                      ) : (
-                        <div className="mb-2">
-                          <input type="text" className="form-control" value={link.data.note} readOnly />
-                        </div>
-                      )}
-                      <div>
-                        <div className="input-group d-flex mb-3">
-                          <input type="text" className="form-control" value={link.data.url} readOnly />
-                          <div className="input-group-append pl-5">
-                            <a
-                              href={link.data.url}
-                              className="btn btn-outline-secondary "
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="button-container">
-                        <div></div> {/* Added wrapper div */}
-                        <div>
-                          <button className="btn me-2" title="Remove From Importants" onClick={() => handleImportantDelete(link.id)}>
-                            <FontAwesomeIcon icon={faTimes} />
-                          </button>
-                          <button className="btn  me-2" title="Edit note" onClick={() => handleUpdateClick(link.id)}>
-                            <FontAwesomeIcon icon={faPen} />
-                          </button>
-                          <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
-                            <FontAwesomeIcon icon={faShare} />
-                          </button>
-                          <Popup trigger={
-                            <button className={`btn`} onClick={(e) => e.preventDefault()}>
-                              <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
-                            </button>
-                          } modal>
-                            {(close) => (
-                              <div className="link-popup text-align-center">
-                                <h3>Select a Collection</h3>
-                                <ul className="list-unstyled" style={{ marginLeft: '10%' }}>
-                                  {collections.map((collection) => (
-                                    <li key={collection.id} className="m-2">
-                                      <button
-                                        className="btn btn-outline"
-                                        style={{ textAlign: 'center' }}
-                                        onClick={() => {
-                                          handleAddToCollection(link.id);
-                                          handleSelectCollection(collection.id, link.id);
-                                          close(); // Close the popup after selecting a collection
-                                        }}
-                                        onMouseEnter={(e) => e.target.classList.add('border-black')}
-                                        onMouseLeave={(e) => e.target.classList.remove('border-black')}
-                                      >
-                                        {collection.data.collection_title}
-                                      </button>
-                                    </li>
-                                  ))}
-                                </ul>
-                                <button className="btn" style={{ marginLeft: '40%' }} onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                </button>
-                              </div>
-                            )}
-                          </Popup>
-                          {editMode && link.id === linkId && (
-                            <button className="btn" title="Save Changes" onClick={() => handleAllSaveUpdate(link.id)}>
-                              <FontAwesomeIcon icon={faCheck} />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      <hr
-                        style={{
-                          width: '100px',
-                          margin: '20px auto 30px auto',
-                          height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
-                          backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
-                          transition: 'height 0.3s ease' /* Add transition for height property */
-
-                        }} />
-                    </div>
-                  ))
-                ) : (
-                  filteredImportant.length > 0 ? (
-                    filteredImportant.map((link) => (
-                      <div key={link.id} className="mb-3">
+                          }} />
                         {editMode && link.id === linkId ? (
                           <div className="mb-2">
-                            <label className="form-label">Edit Note:</label>
+                            <label className="form-label"></label>
                             <input
                               type="text"
                               className="form-control"
@@ -1172,7 +1181,134 @@ const firebaseConfig = {
                           </div>
                         ) : (
                           <div className="mb-2">
-                            <label className="form-label">Edit Note:</label>
+                            <input type="text" className="form-control" value={link.data.note} readOnly />
+                          </div>
+                        )}
+                        <div>
+                          <div className="input-group d-flex mb-3">
+                            <input type="text" className="form-control" value={link.data.url} readOnly />
+                            <div className="input-group-append pl-5">
+                              <a
+                                href={link.data.url}
+                                className="btn btn-outline-secondary "
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="button-container">
+                          <div></div> {/* Added wrapper div */}
+                          <div>
+                            <button className="btn me-2" title="Remove From Importants" onClick={() => handleImportantDelete(link.id)}>
+                              <FontAwesomeIcon icon={faTimes} />
+                            </button>
+                            <button className="btn  me-2" title="Edit note" onClick={() => handleUpdateClick(link.id)}>
+                              <FontAwesomeIcon icon={faPen} />
+                            </button>
+                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
+                              <FontAwesomeIcon icon={faShare} />
+                            </button>
+                            <Popup trigger={
+                              <button className={`btn`} onClick={(e) => e.preventDefault()}>
+                                <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
+                              </button>
+                            } modal>
+                              {(close) => (
+                                <div className="link-popup">
+                                  <h3>Select a Collection</h3>
+                                  <ul className="list-unstyled">
+                                    {collections.map((collection) => (
+                                      <li key={collection.id} className="m-2">
+                                        <button
+                                          className="btn btn-outline"
+                                          style={{ textAlign: 'center' }}
+                                          onClick={() => {
+                                            handleAddToCollection(link.id);
+                                            handleSelectCollection(collection.id, link.id);
+                                            close(); // Close the popup after selecting a collection
+                                          }}
+                                          onMouseEnter={(e) => e.target.classList.add('border-black')}
+                                          onMouseLeave={(e) => e.target.classList.remove('border-black')}
+                                        >
+                                          {collection.data.collection_title}
+                                        </button>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                  <div className="row justify-content-center mt-3">
+                                    <div className="col-md-8 text-center">
+                                      <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </Popup>
+                            {editMode && link.id === linkId && (
+                              <button className="btn" title="Save Changes" onClick={() => handleAllSaveUpdate(link.id)}>
+                                <FontAwesomeIcon icon={faCheck} />
+                              </button>
+                            )}
+                          </div>
+                          <div></div> {/* Added wrapper div */}
+
+                        </div>
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 30px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />
+                      </div>
+                    ))
+                  ) : (
+                    <div className="container mt-5">
+                      <div className="row justify-content-center">
+                        <div className="text-muted d-flex  align-items-center">
+                          <h5 className="mt-3">No Important Links</h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                          <FontAwesomeIcon icon={faBoxOpen} style={{ color: 'black', fontSize: '1.2rem' }} className='mt-2' />
+                        </div>
+                      </div>
+                    </div>
+                  )
+
+                ) : (
+                  filteredImportant.length > 0 ? (
+                    filteredImportant.map((link) => (
+                      <div
+                        key={link.id}
+                        className="mb-3"
+                        onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
+                        onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
+                      >
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 10px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />
+                        {editMode && link.id === linkId ? (
+                          <div className="mb-2">
+                            <label className="form-label"></label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={editedNote}
+                              onChange={(e) => setEditedNote(e.target.value)}
+                            />
+                          </div>
+                        ) : (
+                          <div className="mb-2">
+                            <label className="form-label"></label>
                             <input type="text" className="form-control" value={link.data.note} readOnly />
                           </div>
                         )}
@@ -1198,7 +1334,7 @@ const firebaseConfig = {
                             <button className="btn  me-2" title="Edit note" onClick={() => handleUpdateClick(link.id)}>
                               <FontAwesomeIcon icon={faPen} />
                             </button>
-                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
+                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
                               <FontAwesomeIcon icon={faShare} />
                             </button>
                             <Popup trigger={
@@ -1207,9 +1343,9 @@ const firebaseConfig = {
                               </button>
                             } modal>
                               {(close) => (
-                                <div className="link-popup text-align-center">
+                                <div className="link-popup">
                                   <h3>Select a Collection</h3>
-                                  <ul className="list-unstyled" style={{ marginLeft: '10%' }}>
+                                  <ul className="list-unstyled">
                                     {collections.map((collection) => (
                                       <li key={collection.id} className="m-2">
                                         <button
@@ -1228,8 +1364,12 @@ const firebaseConfig = {
                                       </li>
                                     ))}
                                   </ul>
-                                  <button className="btn" style={{ marginLeft: '40%' }} onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                  </button>
+                                  <div className="row justify-content-center mt-3">
+                                    <div className="col-md-8 text-center">
+                                      <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
+                                      </button>
+                                    </div>
+                                  </div>
                                 </div>
                               )}
                             </Popup>
@@ -1239,7 +1379,18 @@ const firebaseConfig = {
                               </button>
                             )}
                           </div>
+                          <div></div> {/* Added wrapper div */}
+
                         </div>
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 10px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />
                       </div>
                     ))
                   ) : (
@@ -1263,17 +1414,20 @@ const firebaseConfig = {
                   </button>
                 </div>
               </div>
-              <div>
-                <div className={`col-md-9 search-container ${isSearchRecentVisible ? 'show' : 'hide'}`}>
+              <div className="d-flex justify-content-between">
+                <div></div>
+                <div style={{ margin: '0px', paddingBottom: '7px' }} className={`col-md-9 search-container ${isSearchRecentVisible ? 'show' : 'hide'}`}>
                   <input
                     type="text"
-                    className="form-control mb-3 navigation-input" // Add a class for styling
+                    className="form-control mb-3 " // Add a class for styling
                     placeholder="Search by note"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
 
                 </div>
+                <div></div>
+
               </div>
               <div style={{
                 marginTop: isSearchRecentVisible ? '0' : '-80px',
@@ -1281,140 +1435,26 @@ const firebaseConfig = {
               }}>
                 {searchQuery === '' ? (
                   // If there's no search query, render all links
-                  links.map((link) => (
-                    <div
-                      key={link.id}
-                      className="mb-3"
-                      onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
-                      onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
-                    >
-                      <hr
-                        style={{
-                          width: '100px',
-                          margin: '20px auto 30px auto',
-                          height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
-                          backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
-                          transition: 'height 0.3s ease' /* Add transition for height property */
+                  recentlinks.length > 0 ? (
+                    links.map((link) => (
+                      <div
+                        key={link.id}
+                        className="mb-3"
+                        onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
+                        onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
+                      >
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 30px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
 
-                        }} />
-                      {editMode && link.id === linkId ? (
-                        <div className="mb-2">
-                          <label className="form-label">Edit Note:</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={editedNote}
-                            onChange={(e) => setEditedNote(e.target.value)}
-                          />
-                        </div>
-                      ) : (
-                        <div className="mb-2">
-                          <input type="text" style={{ textAlign: 'center' }} value={link.data.note} readOnly className="form-control" />
-                        </div>
-                      )}
-                      <div>
-                        <div className="input-group d-flex mb-3">
-                          <input type="text" style={{ textAlign: 'center' }} className="form-control" value={link.data.url} readOnly />
-                          <div className="input-group-append pl-5">
-                            <a
-                              href={link.data.url}
-                              className="btn btn-outline-secondary "
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="button-container">
-                        <div></div> {/* Added wrapper div */}
-                        <div>
-                          <button className="btn me-2" title="Delete Links" onClick={() => handleDeleteFromAll(link.id)}>
-                            <FontAwesomeIcon icon={faTrash} />
-                          </button>
-                          <button className="btn me-2" title="Edit Note" onClick={() => handleAllUpdateClick(link.id)}>
-                            <FontAwesomeIcon icon={faPen} />
-                          </button>
-                          {link.data.boolImp != false ? (
-                            <button className={`btn me-2`} title="Remove From Importants" onClick={() => handleImportantDelete(link.id)}>
-                              <FontAwesomeIcon icon={faTimes} />
-                            </button>
-                          ) : (
-                            <button className={`btn me-2`} title="Add To Importants" onClick={() => toggleImportant(link.id)}>
-                              <FontAwesomeIcon icon={faExclamation} />
-                            </button>
-                          )}
-                          <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
-                            <FontAwesomeIcon icon={faShare} />
-                          </button>
-                          {link.data.collection_id != null ? (
-                            <button
-                              className="btn"
-                              onClick={() => handleRemoveFromCollection(link.id, link.data.collection_id)}
-                              title="Remove From Collection"
-                            >    <FontAwesomeIcon icon={faBookmark} title="Remove From Collection" style={{ color: 'green' }} />
-                            </button>
-                          ) : (
-                            <Popup trigger={
-                              <button className={`btn`} onClick={(e) => e.preventDefault()}>
-                                <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
-                              </button>
-                            } modal>
-                              {(close) => (
-                                <div className="link-popup text-align-center">
-                                  <h3>Select a Collection</h3>
-                                  <ul className="list-unstyled" style={{ marginLeft: '10%' }}>
-                                    {collections.map((collection) => (
-                                      <li key={collection.id} className="m-2">
-                                        <button
-                                          className="btn btn-outline"
-                                          style={{ textAlign: 'center' }}
-                                          onClick={() => {
-                                            handleAddToCollection(link.id);
-                                            handleSelectCollection(collection.id, link.id);
-                                            close(); // Close the popup after selecting a collection
-                                          }}
-                                          onMouseEnter={(e) => e.target.classList.add('border-black')}
-                                          onMouseLeave={(e) => e.target.classList.remove('border-black')}
-                                        >
-                                          {collection.data.collection_title}
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  <button className="btn" style={{ marginLeft: '40%' }} onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                  </button>
-                                </div>
-                              )}
-                            </Popup>
-                          )}
-                          {editMode && link.id === linkId && (
-                            <button className="btn" onClick={() => handleAllSaveUpdate(link.id)}>
-                              <FontAwesomeIcon icon={faCheck} />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      <hr
-                        style={{
-                          width: '100px',
-                          margin: '20px auto 30px auto',
-                          height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
-                          backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
-                          transition: 'height 0.3s ease' /* Add transition for height property */
-
-                        }} />
-
-                    </div>
-                  ))
-                ) : (
-                  filteredLinks.length > 0 ? (
-                    filteredLinks.map((link) => (
-                      <div key={link.id} className="mb-3">
+                          }} />
                         {editMode && link.id === linkId ? (
                           <div className="mb-2">
-                            <label className="form-label">Edit Note:</label>
+                            <label className="form-label"></label>
                             <input
                               type="text"
                               className="form-control"
@@ -1424,7 +1464,157 @@ const firebaseConfig = {
                           </div>
                         ) : (
                           <div className="mb-2">
-                            <label className="form-label">Edit Note:</label>
+                            <input type="text" style={{ textAlign: 'center' }} value={link.data.note} readOnly className="form-control" />
+                          </div>
+                        )}
+                        <div>
+                          <div className="input-group d-flex mb-3">
+                            <input type="text" style={{ textAlign: 'center' }} className="form-control" value={link.data.url} readOnly />
+                            <div className="input-group-append pl-5">
+                              <a
+                                href={link.data.url}
+                                className="btn btn-outline-secondary "
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="button-container">
+                          <div></div> {/* Added wrapper div */}
+                          <div>
+                            <button className="btn me-2" title="Delete Links" onClick={() => handleDeleteFromAll(link.id)}>
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                            <button className="btn me-2" title="Edit Note" onClick={() => handleAllUpdateClick(link.id)}>
+                              <FontAwesomeIcon icon={faPen} />
+                            </button>
+                            {link.data.boolImp != false ? (
+                              <button className={`btn me-2`} title="Remove From Importants" onClick={() => handleImportantDelete(link.id)}>
+                                <FontAwesomeIcon icon={faTimes} />
+                              </button>
+                            ) : (
+                              <button className={`btn me-2`} title="Add To Importants" onClick={() => toggleImportant(link.id)}>
+                                <FontAwesomeIcon icon={faExclamation} />
+                              </button>
+                            )}
+                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
+                              <FontAwesomeIcon icon={faShare} />
+                            </button>
+                            {link.data.collection_id != null ? (
+                              <button
+                                className="btn"
+                                onClick={() => handleRemoveFromCollection(link.id, link.data.collection_id)}
+                                title="Remove From Collection"
+                              >    <FontAwesomeIcon icon={faBookmark} title="Remove From Collection" style={{ color: 'green' }} />
+                              </button>
+                            ) : (
+                              <Popup trigger={
+                                <button className={`btn`} onClick={(e) => e.preventDefault()}>
+                                  <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
+                                </button>
+                              } modal>
+                                {(close) => (
+                                  <div className="link-popup">
+                                    <h3>Select a Collection</h3>
+                                    <ul className="list-unstyled">
+                                      {collections.map((collection) => (
+                                        <li key={collection.id} className="m-2">
+                                          <button
+                                            className="btn btn-outline"
+                                            style={{ textAlign: 'center' }}
+                                            onClick={() => {
+                                              handleAddToCollection(link.id);
+                                              handleSelectCollection(collection.id, link.id);
+                                              close(); // Close the popup after selecting a collection
+                                            }}
+                                            onMouseEnter={(e) => e.target.classList.add('border-black')}
+                                            onMouseLeave={(e) => e.target.classList.remove('border-black')}
+                                          >
+                                            {collection.data.collection_title}
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                    <div className="row justify-content-center mt-3">
+                                      <div className="col-md-8 text-center">
+                                        <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </Popup>
+                            )}
+                            {editMode && link.id === linkId && (
+                              <button className="btn" onClick={() => handleAllSaveUpdate(link.id)}>
+                                <FontAwesomeIcon icon={faCheck} />
+                              </button>
+                            )}
+                          </div>
+                          <div></div> {/* Added wrapper div */}
+
+                        </div>
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 30px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />
+
+                      </div>
+                    ))
+                  ) : (
+                    <div className="container mt-5">
+                      <div className="row justify-content-center">
+                        <div className="text-muted d-flex  align-items-center">
+                          <h5 className="mt-3">No Links Found</h5>&nbsp;&nbsp;
+                          <FontAwesomeIcon icon={faBoxOpen} style={{ color: 'black', fontSize: '1.2rem' }} className='mt-2' />
+
+                        </div>
+                        <div className="text-muted d-flex  align-items-center">
+                          <h5 className="mt-3">Start Managing Your Links With Linker's Web</h5>
+                        </div>
+                      </div>
+                    </div>
+                  )
+
+                ) : (
+                  filteredLinks.length > 0 ? (
+                    filteredLinks.map((link) => (
+                      <div
+                        key={link.id}
+                        className="mb-3"
+                        onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
+                        onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
+                      >
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 10px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />
+                        {editMode && link.id === linkId ? (
+                          <div className="mb-2">
+                            <label className="form-label"></label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={editedNote}
+                              onChange={(e) => setEditedNote(e.target.value)}
+                            />
+                          </div>
+                        ) : (
+                          <div className="mb-2">
+                            <label className="form-label"></label>
                             <input type="text" className="form-control" value={link.data.note} readOnly />
                           </div>
                         )}
@@ -1459,7 +1649,7 @@ const firebaseConfig = {
                                 <FontAwesomeIcon icon={faExclamation} />
                               </button>
                             )}
-                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
+                            <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
                               <FontAwesomeIcon icon={faShare} />
                             </button>
                             {link.data.collection_id != null ? (
@@ -1476,9 +1666,9 @@ const firebaseConfig = {
                                 </button>
                               } modal>
                                 {(close) => (
-                                  <div className="link-popup text-align-center">
+                                  <div className="link-popup">
                                     <h3>Select a Collection</h3>
-                                    <ul className="list-unstyled" style={{ marginLeft: '10%' }}>
+                                    <ul className="list-unstyled">
                                       {collections.map((collection) => (
                                         <li key={collection.id} className="m-2">
                                           <button
@@ -1497,8 +1687,12 @@ const firebaseConfig = {
                                         </li>
                                       ))}
                                     </ul>
-                                    <button className="btn" style={{ marginLeft: '40%' }} onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                    </button>
+                                    <div className="row justify-content-center mt-3">
+                                      <div className="col-md-8 text-center">
+                                        <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
+                                        </button>
+                                      </div>
+                                    </div>
                                   </div>
                                 )}
                               </Popup>
@@ -1509,7 +1703,18 @@ const firebaseConfig = {
                               </button>
                             )}
                           </div>
+                          <div></div> {/* Added wrapper div */}
+
                         </div>
+                        <hr
+                          style={{
+                            width: '100px',
+                            margin: '20px auto 10px auto',
+                            height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                            backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                            transition: 'height 0.3s ease' /* Add transition for height property */
+
+                          }} />
                       </div>
                     ))
                   ) : (
@@ -1521,147 +1726,169 @@ const firebaseConfig = {
             </div>
           )}
         </div>
-
         <div className={`tab-content ${selectedTab === 'tab4' ? 'fade-in' : 'fade-out'}`}>
           {selectedTab === 'tab4' && (
             <div>
-              <div className="d-flex">
-                <div>
-                  <p className="tab-titles" >Collections</p>
-                </div>
-                <div>
-                  <button
-                    className="btn me-2"
-                    style={{ width: '40px', height: '40px', margin: '0px 0px 15px 7px', padding: 0 }}
-                    onClick={() => setShowAddCollection(!showAddCollection)}
-                  >
-                    {showAddCollection ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
-                  </button>
+              <div className="d-flex justify-content-center">
+  <div className="text-center">
+    <p className="tab-titles">Collections</p>
+  </div>
+  <div>
+    <button
+      className="btn me-2 mb-3"
+      onClick={() => setShowAddCollection(!showAddCollection)}
+    >
+      {showAddCollection ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
+    </button>
+  </div>
+</div>
 
-                </div>
-              </div>
               <div className={`tab-content ${showAddCollection ? 'fade-in' : 'fade-out'}`}>
                 {showAddCollection && (
-                  <div className="mb-3" style={{ marginLeft: '80px' }}>
-                    <div className='row'>
-                      <div className="col-md-9">
-                        <input
-                          type="text"
-                          className="form-control navigation-input"
-                          placeholder="New Collection's Name"
-                          value={newCollectionName}
-                          onChange={(e) => setNewCollectionName(e.target.value)}
-                        />
-                      </div>
-                      <div className="col-md-3">
-                        <button
-                          className="btn"
-                          style={{ marginTop: '5px', marginLeft: '-10px' }}
-                          onClick={handleAddCollectionTitle}
-                        >
-                          <FontAwesomeIcon icon={faPlus} />
-                        </button>
-                      </div>
+                  <div className="mb-3 d-flex justify-content-between">
+                    <div></div>
+                    <div className='d-flex'>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="New Collection's Name"
+                        value={newCollectionName}
+                        onChange={(e) => setNewCollectionName(e.target.value)}
+                      />
+                      <button
+                        className="btn"
+                        onClick={handleAddCollectionTitle}
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </button>
                     </div>
+                    <div></div>
                   </div>
                 )}
               </div>
 
-              {collections.map((collection) => (
-                <div key={collection.id} className="mb-3">
-                  <div className='showflex d-flex'>
-                    <div className="mb-2">
-                      <input
-                        type="text"
-                        className="form-control"
-                        style={{ width: '500px', marginLeft: '30px' }}
-                        value={
-                          editingCollectionId === collection.id
-                            ? editedCollectionTitle
-                            : collection.data.collection_title
-                        }
-                        onChange={(e) => setEditedCollectionTitle(e.target.value)}
-                        readOnly={editingCollectionId !== collection.id}
-                      />
-                    </div>
-                    <div>
-                      <button
-                        className="btn" style={{ marginBottom: '10px', paddingRight: '13px', marginLeft: '-10px' }}
-                        onClick={() => handleShowLinks(collection.id)}
-                      >
-                        {showLinksForCollection ? 'Close' : 'Show'}
-                      </button>
-                    </div>
-                  </div>
-                  <div className='d-flex justify-content-between'>
-                    <div></div>
-                    <div className='button-container' style={{ marginLeft: '-35px', paddingRight: '27px' }}>
-
-                      <button className="btn me-2" onClick={() => handlEditCollectionClick(collection.id)}>
-                        <FontAwesomeIcon icon={faPen} />
-                      </button>
-                      <button
-                        className="btn me-2" title="Delete Collection"
-                        onClick={() => handleDeleteCollection(collection.id)}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
-                      <button className="btn  me-2" title="Share Collection" onClick={() => copyToClipboard(`http://localhost:3000/SharedCollectionPage/${collection.id}`)}>
-                        <FontAwesomeIcon icon={faShare} />
-                      </button>
-                      {editingCollectionId === collection.id && (
-                        // Render the "Check" button only when in edit mode
-                        <button
-                          className="btn  me-2"
-                          onClick={() => handleUpdateCollectionTitle(collection.id)}
-                          title="Save Changes"
-                        >
-                          <FontAwesomeIcon icon={faCheck} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <div className={`tab-content ${showLinksForCollection ? 'fade-in' : 'fade-out'}`}>
-                    {showLinksForCollection === collection.id && (
-                      <div>
-                        {tlinks.map((link) => (
-                          <div key={link.id} className="mb-2">
-                            <div className="mb-2">
-                              <label className="form-label">Edit Note:</label>
-                              <input type="text" className="form-control" value={link.data.note} readOnly />
-                            </div>
-                            <div className="input-group d-flex mb-3">
-                              <input type="text" className="form-control" value={link.data.url} readOnly />
-                              <div className="input-group-append pl-5">
-                                <a
-                                  href={link.data.url}
-                                  className="btn btn-outline-secondary "
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
-                                </a>
-                              </div>
-                            </div>
-                            <div className='button-container justify-content-center' style={{ marginLeft: '25%' }}>
-                              <button
-                                className="btn"
-                                onClick={() => handleRemoveFromCollection(link.id, collection.id)}
-                                title="Remove From Collection"
-                              >    <FontAwesomeIcon icon={faTimes} />
-                              </button>
-
-                              <button className="btn" title="Share Link" onClick={() => copyToClipboard(`http://localhost:3000/SharedLinkPage/${link.id}`)}>
-                                <FontAwesomeIcon icon={faShare} />
-                              </button>
-                            </div>
-                          </div>
-                        ))}
+              {
+                collections.length > 0 ? (
+                  collections.map((collection) => (
+                    <div key={collection.id} className="mb-3">
+                      {/* Collection Title */}
+                      <div className='showflex d-flex'>
+                        <div className="col-md-9 mb-2">
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={collection.data.collection_title}
+                            readOnly
+                          />
+                        </div>
+                        {/* Button to Show/Hide Links */}
+                        <div>
+                          <button
+                            className="btn mb-2 ml-2"
+                            onClick={() => handleShowLinks(collection.id)}
+                          >
+                            {showLinksForCollection === collection.id ? 'Close' : 'Show'}
+                          </button>
+                        </div>
                       </div>
-                    )}
+                      {/* Buttons for Editing, Deleting, and Sharing Collection */}
+                      <div className='d-flex justify-content-between'>
+                        <div></div>
+                        <div className='button-container'>
+                          <div></div>
+                          <div>
+                            <button className="btn" onClick={() => handlEditCollectionClick(collection.id)}>
+                              <FontAwesomeIcon icon={faPen} />
+                            </button>
+                            <button
+                              className="btn" title="Delete Collection"
+                              onClick={() => handleDeleteCollection(collection.id)}
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </button>
+                            <button className="btn" title="Share Collection" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedCollectionPage/${collection.id}`)}>
+                              <FontAwesomeIcon icon={faShare} />
+                            </button>
+                            {editingCollectionId === collection.id && (
+                              // Render the "Check" button only when in edit mode
+                              <button
+                                className="btn  me-2"
+                                onClick={() => handleUpdateCollectionTitle(collection.id)}
+                                title="Save Changes"
+                              >
+                                <FontAwesomeIcon icon={faCheck} />
+                              </button>
+                            )}
+                          </div>
+                          <div></div>
+                        </div>
+                        <div></div>
+                      </div>
+                      <div className={`tab-content ${showLinksForCollection === collection.id ? 'fade-in' : 'fade-out'}`}>
+                        {showLinksForCollection === collection.id && (
+                          <div>
+                            {tlinks.length > 0 ? (
+                              tlinks.map((link) => (
+                                <div key={link.id} className="mb-2">
+                                  <div className="mb-2">
+                                    <label className="form-label"></label>
+                                    <input type="text" className="form-control" value={link.data.note} readOnly />
+                                  </div>
+                                  <div className="input-group d-flex mb-3">
+                                    <input type="text" className="form-control" value={link.data.url} readOnly />
+                                    <div className="input-group-append pl-5">
+                                      <a
+                                        href={link.data.url}
+                                        className="btn btn-outline-secondary "
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <FontAwesomeIcon icon={faExternalLinkAlt} style={{ color: 'black' }} />
+                                      </a>
+                                    </div>
+                                  </div>
+                                  <div className='button-container'>
+                                    <div></div>
+                                    <div>
+                                      <button
+                                        className="btn"
+                                        onClick={() => handleRemoveFromCollection(link.id, collection.id)}
+                                        title="Remove From Collection"
+                                      >
+                                        <FontAwesomeIcon icon={faTimes} />
+                                      </button>
+                                      <button className="btn" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
+                                        <FontAwesomeIcon icon={faShare} />
+                                      </button>
+                                    </div>
+                                    <div></div>
+                                  </div>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="container">
+                                <div className="row justify-content-center">
+                                  <div className="text-muted d-flex align-items-center">
+                                    <h5 className="mb-5">No Links in the collection.</h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                                  </div>
+                                </div>
+                              </div>)}
+
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="container mt-5">
+                    <div className="row justify-content-center">
+                      <div className="text-muted d-flex align-items-center">
+                        <h5 className="mt-3">No Collections</h5> &nbsp;&nbsp;&nbsp;&nbsp;
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              }
             </div>
           )}
         </div>

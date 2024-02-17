@@ -90,7 +90,7 @@ const SharedLinkPage = () => {
 
     const response = await addDoc(collection(db, "tlinks"), {
       "boolImp": false,
-      "collection_id": "string",
+      "collection_id": null,
       "createDate": startOfToday,
       "note": linkData.note,
       "updateDate": startOfToday,

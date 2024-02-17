@@ -74,6 +74,22 @@ function SignUp() {
 
   const handleLogin = async () => {
     const apibaseurl = 'http://127.0.0.1:5000/';
+
+    if(!username  || !password){
+      alert("Fill the required Fields!")
+      return;
+    }
+
+    if (!confirmPassword && isSignUp==true) {
+      alert("Confirm Your Password");
+      return;
+    }
+  
+    // Check if password and confirm password match
+    if (password !== confirmPassword && isSignUp==true) {
+      alert("Password and Confirm Password do not match");
+      return;
+    }
     // Set the URL for the API based on the current mode (sign-up or login)
     const apiUrl = isSignUp ? `${apibaseurl}/signup` : `${apibaseurl}/login`;
 
@@ -115,32 +131,39 @@ function SignUp() {
   return (
     <div className="container" style={{ height: 'auto', width: 'auto' }}>
       <div className="row justify-content-center">
-        <div className={`col-md-6 fade-transition ${isSignUp ? 'active' : ''}`}>
+        <div className="col-md-6 fade-transition" style={{ position: 'relative' }}>
           <div className="text-center pb-3">
             <img
               src={LinkersDBlogo}
-              style={{ display: 'block', margin: '-15px auto 0 auto', height: '230px', width: 'auto',paddingLeft:'10px' }}
+              style={{ display: 'block', margin: '-15px auto 0 auto', height: '230px', width: 'auto', paddingLeft: '10px' }}
               alt="LinkersDB Logo"
             />
-            <h1 style={{marginRight:'10px'}}>{isSignUp ? 'Sign Up' : 'Login'}</h1>
           </div>
-          <div style={{margin:'0px auto 0px auto'}}>
-
+          <div className='d-flex justify-content-center'>
+            <div></div>
+            <div className="pt-1 pb-1">
+              <h2 style={{ position: 'absolute', transform: 'translate(-50%, -50%)', margin: '0', transition: 'opacity 0.5s', opacity: isSignUp ? '0' : '1' }}>Login</h2>
+              <h2 style={{ position: 'absolute', marginTop: '-50px', transform: 'translate(-50%, -50%)', margin: '0', transition: 'opacity 0.5s', opacity: isSignUp ? '1' : '0' }}>Sign Up</h2>
+            </div>
+            <div></div>
+          </div>
           <div>
+            <div className="row justify-content-center mt-3">
+            </div>
             <div className="form-group mt-2 mb-2">
-              <label htmlFor="username" style={{ marginLeft: '47%' }} >Email:</label>
+              <label htmlFor="password" style={{fontSize:'12px'}}>Email:</label>
               <input
                 type="text"
                 className="form-control"
                 style={{ width: '100%' }}
-                placeholder="Username"
+                placeholder="Email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
             <div className="form-group mt-2">
-              <label htmlFor="password" style={{ marginLeft: '46%' }}>Password:</label>
+              <label htmlFor="password" style={{fontSize:'12px'}}>Password:</label>
               <input
                 type="password"
                 className="form-control"
@@ -152,8 +175,8 @@ function SignUp() {
               />
             </div>
             {isSignUp && (
-              <div className="form-group mt-2" >
-                <label htmlFor="confirmPassword" style={{ marginLeft: '42%' }}>Confirm Password:</label>
+              <div className="form-group mt-2">
+                <label htmlFor="confirmPassword" style={{fontSize:'12px'}}>Confirm Password:</label>
                 <input
                   type="password"
                   className="form-control"
@@ -165,27 +188,25 @@ function SignUp() {
                 />
               </div>
             )}
-            <div className="text-center">
+            <div className="text-center mt-2">
               <button className="btn" onClick={handleLogin}>
                 {isSignUp ? 'Sign Up' : 'Login'}
               </button>
             </div>
+            <p className="mt-3 text-center">
+              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+              <span onClick={toggleForm} className='mt-4 mt-2' style={{ cursor: 'pointer', marginBottom: '-20px' }}>
+                {isSignUp ? 'Login' : 'Sign Up'}
+              </span>
+            </p>
           </div>
-          <p className="mt-3 text-center">
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-            <span onClick={toggleForm} className='mt-4' style={{ cursor: 'pointer', marginBottom: '-20px' }}>
-              {isSignUp ? 'Login' : 'Sign Up'}
-            </span>
-          </p>
           <div className='belowsection'>
-
-            <hr style={{ width: '300px', margin: '20px auto' }} />
-            <div className="text-center">
+            <hr style={{width:'300px',margin:'0px auto 0px auto'}}/>
+            <div className="text-center mt-3">
               <button className="btn " onClick={signInWithGoogle}>
                 <FontAwesomeIcon icon={faGoogle} style={{ marginRight: '10px' }} /> Continue with Google
               </button>
             </div>
-          </div>
           </div>
         </div>
       </div>
