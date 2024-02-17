@@ -1,31 +1,38 @@
 .dashboard-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  overflow-x: hidden;
+  /* Prevent horizontal scrollbar */
 
 }
+
 .d-flex {
   display: flex;
-  justify-content: center; /* Align items horizontally at the center */
-  align-items: center; /* Align items vertically at the center */
+  justify-content: center;
+  /* Align items horizontally at the center */
+  align-items: center;
+  /* Align items vertically at the center */
 }
-*{
+
+* {
   font-family: 'Quicksand', sans-serif;
 
 }
-input{
+
+input {
   text-align: center;
 }
+
 .tab-titles {
   font-size: 23px;
   font-weight: lighter;
-  width:120px;
+  width: 120px;
   font-family: 'Quicksand', sans-serif;
-  
+
 }
 
-.tab-content{
+.tab-content {
   overflow: hidden;
 }
 
@@ -33,9 +40,11 @@ input{
   margin-left: 12%;
   opacity: 0;
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  align-items: center; /* Align items vertically at the center */
+  align-items: center;
+  /* Align items vertically at the center */
   transform: translateX(50%);
-  overflow-x: hidden; /* Prevent horizontal scrollbar */
+  overflow-x: hidden;
+  /* Prevent horizontal scrollbar */
 }
 
 .search-container.show {
@@ -57,9 +66,12 @@ input{
 
 /* CSS */
 .navigation-input:focus {
-  border-color:black; /* Your desired border color */
-  box-shadow: none; /* Optionally, remove the default box shadow on focus */
+  border-color: black;
+  /* Your desired border color */
+  box-shadow: none;
+  /* Optionally, remove the default box shadow on focus */
 }
+
 .fade-in {
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
@@ -68,70 +80,114 @@ input{
 .fade-out {
   opacity: 0;
   transition: opacity 0.5s ease-in-out;
-  pointer-events: none; /* Prevent interaction during transition */
+  pointer-events: none;
+  /* Prevent interaction during transition */
 }
 
-  .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background for the blur effect */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background for the blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Adjust the z-index as needed */
+}
+
+.link-popup {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  /* Make sure the popup appears above the overlay */
+}
+
+@media (max-width: 400px) {
+  .nav-tabs {
     display: flex;
+    flex-wrap: nowrap;
     justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Adjust the z-index as needed */
-  }
-  
-  .link-popup {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    z-index: 1001; /* Make sure the popup appears above the overlay */
-  }
-  
-  .tab-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: none; /* Add this line to remove the bottom border */
-
-  }
-  
-  .tab-list li {
-    height:44px;
-    width:85px;
-    cursor: pointer;
-    padding: 12px; /* Increased padding */
-    margin-right: 8px; /* Reduced right margin */
-    border: 1px solid #050505; /* Change border color */
-    border-radius: 10px; /* Increase border radius */
-    background-color: #f0f0f0; /* Default background color */
-    color: #333; /* Default text color */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-  }
-  
-  .tab-list li.active {
-    background-color: transparent; /* Remove background color */
-    color: black;
-    box-shadow: 0 0 10px rgba(17, 18, 18, 0.8); /* Add drop shadow */
-    border: 1px solid black; /* Increase border width for heavy stroke */
+    text-align: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For IE/Edge */
   }
 
-  .button-container{
-    display:flex;
-    justify-content: space-between;
+  .nav-link {
+    padding: 20% 0% 10% 35% !important;    
   }
-  /* Add this to your CSS for styling the navigation input */
+  .imp{
+    padding: 21% 20% 0% 20% !important;    
+  }
+  .nav-tabs::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+}
+
+
+
+.tab-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: none;
+  /* Add this line to remove the bottom border */
+
+}
+
+.nav-link {
+  margin-bottom: 12px;
+}
+
+.tab-list li {
+  height: 44px;
+  width: 85px;
+  cursor: pointer;
+  /* padding: 12px; /* Increased padding */
+  /* padding:0px; */
+  margin-right: 8px;
+  border: 1px solid #050505;
+  /* Change border color */
+  border-radius: 10px;
+  /* Increase border radius */
+  background-color: #f0f0f0;
+  /* Default background color */
+  color: #333;
+  /* Default text color */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  /* Smooth transitions */
+}
+
+.tab-list li.active {
+  background-color: transparent;
+  /* Remove background color */
+  color: black;
+  box-shadow: 0 0 10px rgba(17, 18, 18, 0.8);
+  /* Add drop shadow */
+  border: 1px solid black;
+  /* Increase border width for heavy stroke */
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Add this to your CSS for styling the navigation input */
 .navigation-input {
   width: 100%;
-  height:40px;
+  height: 40px;
   margin-top: 5px;
   padding: 10px;
-  padding-left:-50px;
+  padding-left: -50px;
   border: 1px solid #ccc;
   border-radius: 8px;
 }
@@ -140,20 +196,25 @@ input{
 .mb-3 {
   margin-bottom: 15px;
 }
+
 /* Add this CSS to your stylesheet */
 .mb-3:hover hr {
-  border-color: #333; /* Darken the border color */
+  border-color: #333;
+  /* Darken the border color */
 }
+
 .border-black {
   border: 1px solid black !important;
 }
+
 .btn-outline-primary {
-  border: 1px solid transparent !important; /* Make border transparent by default */
+  border: 1px solid transparent !important;
+  /* Make border transparent by default */
 }
 
-.form-control:focus{
+.form-control:focus {
   border-color: black !important;
-  box-shadow: none !important ;
+  box-shadow: none !important;
 }
 
 

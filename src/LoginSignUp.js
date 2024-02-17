@@ -193,9 +193,9 @@ function SignUp() {
                 {isSignUp ? 'Sign Up' : 'Login'}
               </button>
             </div>
-            <p className="mt-3 text-center">
+            <p className="mt-3 text-center" onClick={toggleForm}>
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-              <span onClick={toggleForm} className='mt-4 mt-2' style={{ cursor: 'pointer', marginBottom: '-20px' }}>
+              <span  className='mt-4 mt-2' style={{ cursor: 'pointer', marginBottom: '-20px' }}>
                 {isSignUp ? 'Login' : 'Sign Up'}
               </span>
             </p>

@@ -789,25 +789,26 @@ const Dashboard = () => {
             className={`nav-item tab-item ${selectedTab === 'tab1' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab1')}
           >
-            <FontAwesomeIcon icon={faClock} className="nav-link" style={{ color: 'black', padding: '0 0 5px 20px', height: '18px' }} />
+            
+            <FontAwesomeIcon icon={faClock} className="rec nav-link" style={{ color: 'black', height: '18px',paddingLeft:'32px',paddingTop:'11px' }} />
           </li>
           <li
             className={`nav-item tab-item ${selectedTab === 'tab2' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab2')}
           >
-            <FontAwesomeIcon icon={faExclamation} className="nav-link" style={{ color: 'black', padding: '0 0 5px 28px', height: '19px' }} />
+            <FontAwesomeIcon icon={faExclamation} className="imp" style={{ color: 'black',height: '19px',paddingLeft:'38px',paddingTop:'11px'}} />
           </li>
           <li
             className={`nav-item tab-item ${selectedTab === 'tab3' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab3')}
           >
-            <FontAwesomeIcon icon={faListSquares} className="nav-link" style={{ color: 'black', padding: '0 0 5px 20px' }} />
+            <FontAwesomeIcon icon={faListSquares} className="all nav-link" style={{ color: 'black',paddingLeft:'32px',paddingTop:'11px' }} />
           </li>
           <li
             className={`nav-item tab-item ${selectedTab === 'tab4' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab4')}
           >
-            <FontAwesomeIcon icon={faBookmark} className="nav-link" style={{ color: 'black', padding: '0 0 5px 23px' }} />
+            <FontAwesomeIcon icon={faBookmark} className="coll nav-link" style={{ color: 'black',paddingLeft:'35px',paddingTop:'11px' }} />
           </li>
         </ul>
 
@@ -1211,42 +1212,51 @@ const Dashboard = () => {
                             <button className="btn me-2" title="Share Link" onClick={() => copyToClipboard(`https://linkersdb-web.vercel.app/SharedLinkPage/${link.id}`)}>
                               <FontAwesomeIcon icon={faShare} />
                             </button>
-                            <Popup trigger={
-                              <button className={`btn`} onClick={(e) => e.preventDefault()}>
-                                <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
+                            {link.data.collection_id != null ? (
+                              <button
+                                className="btn"
+                                onClick={() => handleRemoveFromCollection(link.id, link.data.collection_id)}
+                                title="Remove From Collection"
+                              >    <FontAwesomeIcon icon={faBookmark} title="Remove From Collection" style={{ color: 'green' }} />
                               </button>
-                            } modal>
-                              {(close) => (
-                                <div className="link-popup">
-                                  <h3>Select a Collection</h3>
-                                  <ul className="list-unstyled">
-                                    {collections.map((collection) => (
-                                      <li key={collection.id} className="m-2">
-                                        <button
-                                          className="btn btn-outline"
-                                          style={{ textAlign: 'center' }}
-                                          onClick={() => {
-                                            handleAddToCollection(link.id);
-                                            handleSelectCollection(collection.id, link.id);
-                                            close(); // Close the popup after selecting a collection
-                                          }}
-                                          onMouseEnter={(e) => e.target.classList.add('border-black')}
-                                          onMouseLeave={(e) => e.target.classList.remove('border-black')}
-                                        >
-                                          {collection.data.collection_title}
+                            ) : (
+                              <Popup trigger={
+                                <button className={`btn`} onClick={(e) => e.preventDefault()}>
+                                  <FontAwesomeIcon icon={faBookmark} title="Save To Collections" style={{ color: '' }} />
+                                </button>
+                              } modal>
+                                {(close) => (
+                                  <div className="link-popup">
+                                    <h3>Select a Collection</h3>
+                                    <ul className="list-unstyled">
+                                      {collections.map((collection) => (
+                                        <li key={collection.id} className="m-2">
+                                          <button
+                                            className="btn btn-outline"
+                                            style={{ textAlign: 'center' }}
+                                            onClick={() => {
+                                              handleAddToCollection(link.id);
+                                              handleSelectCollection(collection.id, link.id);
+                                              close(); // Close the popup after selecting a collection
+                                            }}
+                                            onMouseEnter={(e) => e.target.classList.add('border-black')}
+                                            onMouseLeave={(e) => e.target.classList.remove('border-black')}
+                                          >
+                                            {collection.data.collection_title}
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                    <div className="row justify-content-center mt-3">
+                                      <div className="col-md-8 text-center">
+                                        <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
                                         </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  <div className="row justify-content-center mt-3">
-                                    <div className="col-md-8 text-center">
-                                      <button className="btn" onClick={close}><FontAwesomeIcon icon={faTimes} />
-                                      </button>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              )}
-                            </Popup>
+                                )}
+                              </Popup>
+                            )}
                             {editMode && link.id === linkId && (
                               <button className="btn" title="Save Changes" onClick={() => handleAllSaveUpdate(link.id)}>
                                 <FontAwesomeIcon icon={faCheck} />
@@ -1730,18 +1740,18 @@ const Dashboard = () => {
           {selectedTab === 'tab4' && (
             <div>
               <div className="d-flex justify-content-center">
-  <div className="text-center">
-    <p className="tab-titles">Collections</p>
-  </div>
-  <div>
-    <button
-      className="btn me-2 mb-3"
-      onClick={() => setShowAddCollection(!showAddCollection)}
-    >
-      {showAddCollection ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
-    </button>
-  </div>
-</div>
+                <div className="text-center">
+                  <p className="tab-titles">Collections</p>
+                </div>
+                <div>
+                  <button
+                    className="btn me-2 mb-3"
+                    onClick={() => setShowAddCollection(!showAddCollection)}
+                  >
+                    {showAddCollection ? <FontAwesomeIcon icon={faMinus} /> : <FontAwesomeIcon icon={faPlus} />}
+                  </button>
+                </div>
+              </div>
 
               <div className={`tab-content ${showAddCollection ? 'fade-in' : 'fade-out'}`}>
                 {showAddCollection && (
