@@ -35,7 +35,7 @@ const Dashboard = () => {
   const [recentlinks, recentsetLinks] = useState([]);
   const [importantlinks, importntsetLinks] = useState([]);
   const [collectiontitle, setCollectiontitles] = useState([]);
-  const [cookie, setCookie] = useCookies(['userId']);
+  const [cookie, setCookie, removeCookie] = useCookies(['userId']); // Destructure removeCookie from useCookies
   const [loadingAllLinks, setLoadingAllLinks] = useState(true);
   const [loadingImportantLinks, setLoadingImportantLinks] = useState(true);
   const [loadingRecentLinks, setLoadingRecentLinks] = useState(true);
@@ -698,6 +698,7 @@ const Dashboard = () => {
   };
   const handleLogOut = () => {
     localStorage.setItem('userId', '');
+    removeCookie('userId');
     navigate('../LoginSignUp')
   };
   //#endregion
@@ -740,7 +741,7 @@ const Dashboard = () => {
           <div>
             <Popup
               trigger={
-                <button className={`btn`}>
+                <button className={`btn border-black`}>
                   Add a link
                 </button>
               }
@@ -790,25 +791,25 @@ const Dashboard = () => {
             onClick={() => handleTabClick('tab1')}
           >
             
-            <FontAwesomeIcon icon={faClock} className="rec nav-link" style={{ color: 'black', height: '18px',paddingLeft:'32px',paddingTop:'11px' }} />
+            <FontAwesomeIcon icon={faClock} className="rec nav-link" style={{ color: 'black', height: '18px',paddingLeft:'32px',paddingTop:'11px',border:'none' }} />
           </li>
           <li
             className={`nav-item tab-item ${selectedTab === 'tab2' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab2')}
           >
-            <FontAwesomeIcon icon={faExclamation} className="imp" style={{ color: 'black',height: '19px',paddingLeft:'38px',paddingTop:'11px'}} />
+            <FontAwesomeIcon icon={faExclamation} className="imp" style={{ color: 'black',height: '19px',paddingLeft:'38px',paddingTop:'11px',border:'none'}} />
           </li>
           <li
             className={`nav-item tab-item ${selectedTab === 'tab3' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab3')}
           >
-            <FontAwesomeIcon icon={faListSquares} className="all nav-link" style={{ color: 'black',paddingLeft:'32px',paddingTop:'11px' }} />
+            <FontAwesomeIcon icon={faListSquares} className="all nav-link" style={{ color: 'black',paddingLeft:'32px',paddingTop:'11px',border:'none' }} />
           </li>
           <li
             className={`nav-item tab-item ${selectedTab === 'tab4' ? 'active' : ''}`}
             onClick={() => handleTabClick('tab4')}
           >
-            <FontAwesomeIcon icon={faBookmark} className="coll nav-link" style={{ color: 'black',paddingLeft:'35px',paddingTop:'11px' }} />
+            <FontAwesomeIcon icon={faBookmark} className="coll nav-link" style={{ color: 'black',paddingLeft:'35px',paddingTop:'11px',border:'none' }} />
           </li>
         </ul>
 

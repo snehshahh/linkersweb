@@ -5,6 +5,7 @@ import LoginSignUp from './LoginSignUp';
 import Dashboard from './Dashboard';
 import SharedLinkPage from './SharedLinkPage'
 import SharedCollectionPage from './SharedCollectionPage'
+import PrivacyPolicy from './PrivacyPolicy';
 import './App.css'
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           element={cookies?.userId ? <Navigate to="/Dashboard" /> : <Navigate to="/LoginSignUp" />}
         />
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
         <Route path="/LoginSignUp" element={<LoginSignUp />} />
         <Route path="/SharedLinkPage/:linkId" element={<SharedLinkPage />} />
         <Route path="/SharedLinkPage/:linkId/LoginSignUp" element={<LoginSignUp />} />
