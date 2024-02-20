@@ -108,31 +108,6 @@ input {
   /* Make sure the popup appears above the overlay */
 }
 
-@media (max-width: 400px) {
-  .nav-tabs {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    text-align: center;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
-    scrollbar-width: none; /* For Firefox */
-    -ms-overflow-style: none; /* For IE/Edge */
-  }
-
-  .nav-link {
-    padding: 20% 0% 10% 35% !important;    
-  }
-  .imp{
-    padding: 21% 20% 0% 20% !important;    
-  }
-  .nav-tabs::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Opera */
-  }
-}
-
-
-
 .tab-list {
   list-style: none;
   padding: 0;
@@ -144,12 +119,20 @@ input {
 }
 
 .nav-link {
-  margin-bottom: 12px;
+  font-weight: 50px;
+  pointer-events: none;
 }
 
-.tab-list li {
+.nav-item.active {
+  background-color: #ffffff; /* Change background color to white */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Apply a very light box shadow */
+}
+
+
+
+.navbar-nav > div {
   height: 44px;
-  width: 85px;
+  width: 112px;
   cursor: pointer;
   /* padding: 12px; /* Increased padding */
   /* padding:0px; */
@@ -160,21 +143,13 @@ input {
   /* Increase border radius */
   background-color: #f0f0f0;
   /* Default background color */
-  color: #333;
+  color: #525050;
   /* Default text color */
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  /* Smooth transitions */
+  /* Smooth transitions *//* Transition for border color and background color */
 }
 
-.tab-list li.active {
-  background-color: transparent;
-  /* Remove background color */
-  color: black;
-  box-shadow: 0 0 10px rgba(17, 18, 18, 0.8);
-  /* Add drop shadow */
-  border: 1px solid black;
-  /* Increase border width for heavy stroke */
-}
+
 
 .button-container {
   display: flex;

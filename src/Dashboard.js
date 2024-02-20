@@ -65,7 +65,7 @@ const Dashboard = () => {
       let q;
 
       if (linkType === 'all') {
-        q = query(collection(db, "tlinks"), where("user_id", "==", userId));
+        q = query(collection(db, "tlinks"), where("user_id", "==", userId),orderBy("createDate", "desc"));
       } else if (linkType === 'important') {
         q = query(collection(db, "tlinks"), where("user_id", "==", userId), where("boolImp", "==", true));
       } else if (linkType === 'recent') {
@@ -667,13 +667,17 @@ const Dashboard = () => {
   };
 
   const [selectedTab, setSelectedTab] = useState('tab1');
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
   const handleTabClick = (tab) => {
     if (tab === 'tab4') {
       setShowLinksForCollection(null);
       setSelectedTab(tab);
+      setIsNavOpen(false); // Close the navigation when a tab is clicked
     }
     else {
       setSelectedTab(tab);
+      setIsNavOpen(false); // Close the navigation when a tab is clicked
     }
   };
   const [isSearchRecentVisible, setIsSearchRecentVisible] = useState(false);
@@ -784,36 +788,42 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <nav>
-        <ul className="nav nav-tabs tab-list">
-          <li
-            className={`nav-item tab-item ${selectedTab === 'tab1' ? 'active' : ''}`}
-            onClick={() => handleTabClick('tab1')}
-          >
-            
-            <FontAwesomeIcon icon={faClock} className="rec nav-link" style={{ color: 'black', height: '18px',paddingLeft:'32px',paddingTop:'11px',border:'none' }} />
-          </li>
-          <li
-            className={`nav-item tab-item ${selectedTab === 'tab2' ? 'active' : ''}`}
-            onClick={() => handleTabClick('tab2')}
-          >
-            <FontAwesomeIcon icon={faExclamation} className="imp" style={{ color: 'black',height: '19px',paddingLeft:'38px',paddingTop:'11px',border:'none'}} />
-          </li>
-          <li
-            className={`nav-item tab-item ${selectedTab === 'tab3' ? 'active' : ''}`}
-            onClick={() => handleTabClick('tab3')}
-          >
-            <FontAwesomeIcon icon={faListSquares} className="all nav-link" style={{ color: 'black',paddingLeft:'32px',paddingTop:'11px',border:'none' }} />
-          </li>
-          <li
-            className={`nav-item tab-item ${selectedTab === 'tab4' ? 'active' : ''}`}
-            onClick={() => handleTabClick('tab4')}
-          >
-            <FontAwesomeIcon icon={faBookmark} className="coll nav-link" style={{ color: 'black',paddingLeft:'35px',paddingTop:'11px',border:'none' }} />
-          </li>
-        </ul>
+      <nav className="navbar navbar-expand-lg">
+        {/* Button to toggle navigation */}
+        <button className="navbar-toggler" type="button" onClick={() => setIsNavOpen(!isNavOpen)}>
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
+        {/* Navigation links */}
+        <div className={`navbar-nav d-flex justify-content-between w-100 ${isNavOpen ? 'show' : ''}`}>
+          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab1' ? 'active' : ''}`} onClick={() => handleTabClick('tab1')}>
+            <button className="nav-link btn btn-link tab-button ">
+              <FontAwesomeIcon icon={faClock} className="rec" />
+            </button>
+            <span style={{marginRight:'20px'}}>Recents</span>
+          </div>
+          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab2' ? 'active' : ''}`} onClick={() => handleTabClick('tab2')}>
+            <button className="nav-link  btn btn-link tab-button d-flex justify-content-between">
+              <FontAwesomeIcon  icon={faExclamation} className="imp" />
+            </button>
+            <span style={{marginRight:'20px'}}>Importants</span>
+          </div>
+          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab3' ? 'active' : ''}`} onClick={() => handleTabClick('tab3')}>
+            <button className="nav-link  btn btn-link tab-button d-flex justify-content-between">
+              <FontAwesomeIcon  icon={faListSquares} className="imp" />
+            </button>
+            <span style={{marginRight:'60px'}}>All</span>
+          </div>
+          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab4' ? 'active' : ''}`} onClick={() => handleTabClick('tab4')}>
+            <button className="nav-link  btn btn-link tab-button d-flex justify-content-between">
+              <FontAwesomeIcon  icon={faBookmark} className="imp" />
+            </button>
+            <span style={{marginRight:'60px'}}>Collections</span>
+          </div>
+        </div>
       </nav>
+
+
 
       <div className="tab-content mt-3">
         <div className={`tab-content ${selectedTab === 'tab1' ? 'fade-in' : 'fade-out'}`}>
@@ -1446,7 +1456,7 @@ const Dashboard = () => {
               }}>
                 {searchQuery === '' ? (
                   // If there's no search query, render all links
-                  recentlinks.length > 0 ? (
+                  links.length > 0 ? (
                     links.map((link) => (
                       <div
                         key={link.id}
@@ -1840,7 +1850,21 @@ const Dashboard = () => {
                           <div>
                             {tlinks.length > 0 ? (
                               tlinks.map((link) => (
-                                <div key={link.id} className="mb-2">
+                                <div
+                                  key={link.id}
+                                  className="mb-3"
+                                  onMouseEnter={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: true }))}
+                                  onMouseLeave={() => setHoveredLinks(prevState => ({ ...prevState, [link.id]: false }))}
+                                >
+                                  <hr
+                                    style={{
+                                      width: '100px',
+                                      margin: '20px auto 20px auto',
+                                      height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                                      backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                                      transition: 'height 0.3s ease' /* Add transition for height property */
+
+                                    }} />
                                   <div className="mb-2">
                                     <label className="form-label"></label>
                                     <input type="text" className="form-control" value={link.data.note} readOnly />
@@ -1874,6 +1898,15 @@ const Dashboard = () => {
                                     </div>
                                     <div></div>
                                   </div>
+                                  <hr
+                                    style={{
+                                      width: '100px',
+                                      margin: '20px auto 30px auto',
+                                      height: hoveredLinks[link.id] ? '4px' : '0px', /* Set desired thickness */
+                                      backgroundColor: hoveredLinks[link.id] ? 'black' : 'black', /* Set color of the line */
+                                      transition: 'height 0.3s ease' /* Add transition for height property */
+
+                                    }} />
                                 </div>
                               ))
                             ) : (

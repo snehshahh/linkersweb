@@ -4,7 +4,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import { initializeApp } from "firebase/app";
 import LinkersDBlogo from './LinkersDBlogo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExternalLinkAlt,faDashboard } from '@fortawesome/free-solid-svg-icons';
+import { faExternalLinkAlt, faDashboard } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { getFirestore, getDoc, doc, setDoc, addDoc, collection } from 'firebase/firestore';
 import { useCookies } from 'react-cookie';
@@ -14,7 +14,7 @@ const SharedLinkPage = () => {
   const { linkId } = useParams();
   const [linkData, setLinkData] = useState(null);
   const [userId, setUserId] = useState(undefined);
-  const [cookies, setCookie] = useCookies(['userId']);
+  const [cookie, setCookie, removeCookie] = useCookies(['userId']); // Destructure removeCookie from useCookies
   const history = useNavigate();
 
   //#region Friebase Config
@@ -32,27 +32,17 @@ const SharedLinkPage = () => {
   const db = getFirestore(app); // Get the Firestore instance
   //#endregion
   useEffect(() => {
-    const userIdCookie = cookies.userId;
-    console.log("userIdCookie:", userIdCookie);
-
-    if (userIdCookie) {
-      setUserId(userIdCookie);
-    }
-  }, [cookies]);
-
-  useEffect(() => {
-    const logStateAfterDelay = setTimeout(() => {
-      console.log("userId state (after setting):", userId);
-    }, 100);
-
-    return () => clearTimeout(logStateAfterDelay);
+    const userIdCookie = cookie.userId;
+    setUserId(userIdCookie)
   }, [userId]);
+  console.log(userId);
+
   useEffect(() => {
     // Function to get a link by ID from a user's collection
     const getLinkById = async () => {
       // Check if the user is logged in
       const url = window.location.href;
-      if (cookies == undefined || cookies == "" || cookies == null) {
+      if (cookie == undefined || cookie == "" || cookie == null) {
         // User is not logged in, redirect to login page
         history('./LoginSignUp', { state: { data: url } });;
         return;
@@ -95,19 +85,19 @@ const SharedLinkPage = () => {
       "note": linkData.note,
       "updateDate": startOfToday,
       "url": linkData.url,
-      "user_id": cookies['userId']
+      "user_id": userId
     });
     if (response.id) {
       history("../Dashboard");
     }
   };
   const handleDashboard = async () => {
-      history("../Dashboard");
+    history("../Dashboard");
   };
 
   return (
     <div className="container text-center">
-      <button  className="btn" style={{ margin: '20px auto 20px auto' }} onClick={handleDashboard}>Dashboard</button>
+      <button className="btn" style={{ margin: '20px auto 20px auto' }} onClick={handleDashboard}>Dashboard</button>
       <div className="image">
         <img src={LinkersDBlogo} style={{ height: '100px', width: 'auto' }} alt="LinkersDB Logo" />
       </div>

@@ -15,7 +15,7 @@ const SharedCollectionPage = () => {
     const [collectionData, setCollectionData] = useState(null);
     const [userId, setUserId] = useState(undefined);
     const [collectionTitle, setCollectionTitle] = useState('');
-    const [cookies, setCookie] = useCookies(['userId']);
+    const [cookie, setCookie, removeCookie] = useCookies(['userId']); // Destructure removeCookie from useCookies
     const [hoveredLinks, setHoveredLinks] = useState({});
 
     const history = useNavigate();
@@ -35,26 +35,16 @@ const SharedCollectionPage = () => {
     const db = getFirestore(app); // Get the Firestore instance
     //#endregion
     useEffect(() => {
-        const userIdCookie = cookies.userId;
-        console.log("userIdCookie:", userIdCookie);
-
-        if (userIdCookie) {
-            setUserId(userIdCookie);
-        }
-    }, [cookies]);
-    useEffect(() => {
-        const logStateAfterDelay = setTimeout(() => {
-            console.log("userId state (after setting):", userId);
-        }, 100);
-
-        return () => clearTimeout(logStateAfterDelay);
-    }, [userId]);
+        const userIdCookie = cookie.userId;
+        setUserId(userIdCookie)
+      }, [userId]);
+      console.log(userId);
 
     useEffect(() => {
         // Function to get the user's shared collection of links
         const getSharedCollection = async () => {
             // Check if the user is logged in
-            if (!cookies) {
+            if (!cookie) {
                 // User is not logged in, redirect to login page
                 history('./LoginSignUp');
                 return;
@@ -114,7 +104,7 @@ const SharedCollectionPage = () => {
             "note": item.note,
             "updateDate": startOfToday,
             "url": item.url,
-            "user_id": cookies['userId']
+            "user_id": userId
         });
 
     };
@@ -134,7 +124,7 @@ const SharedCollectionPage = () => {
                 "collection_title": collectionTitle,
                 "createDate": startOfToday,
                 "updateDate": startOfToday,
-                "user_id": cookies['userId']
+                "user_id": userId
             });
             // Add links data
             collectionData.forEach((linkItem) => {
@@ -146,7 +136,7 @@ const SharedCollectionPage = () => {
                     "note": linkItem.note,
                     "updateDate": startOfToday,
                     "url": linkItem.url,
-                    "user_id": cookies['userId']
+                    "user_id": userId
                 });
             });
             try {
