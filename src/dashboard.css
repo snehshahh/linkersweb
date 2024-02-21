@@ -191,6 +191,32 @@ input {
   border-color: black !important;
   box-shadow: none !important;
 }
+.link-popup .fade-in {
+    transition: opacity 0.3s ease-in-out;
+}
+
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: row; /* Ensure all tabs stay in the same line */
+  }
+
+  .nav-item {
+    flex: 1; /* Make all tabs take equal space */
+    text-align: center; /* Center align the content */
+    width:10px;
+  }
+
+  .link-popup {
+    width: 300px;
+  }
+  .tab-button {
+    padding: 0.5rem; /* Adjust button padding */
+    font-size: 1rem; /* Adjust button font size */
+
+  }
+}
+
 
 
 /* Add any additional styling as needed */

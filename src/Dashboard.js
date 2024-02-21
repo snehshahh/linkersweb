@@ -65,7 +65,7 @@ const Dashboard = () => {
       let q;
 
       if (linkType === 'all') {
-        q = query(collection(db, "tlinks"), where("user_id", "==", userId),orderBy("createDate", "desc"));
+        q = query(collection(db, "tlinks"), where("user_id", "==", userId), orderBy("createDate", "desc"));
       } else if (linkType === 'important') {
         q = query(collection(db, "tlinks"), where("user_id", "==", userId), where("boolImp", "==", true));
       } else if (linkType === 'recent') {
@@ -753,9 +753,9 @@ const Dashboard = () => {
               nested
             >
               {(close) => (
-                <div className="link-popup text-align-center" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '400px' }}>
+                <div className="link-popup">
                   <h3>Add URL and Notes</h3>
-                  <div className="row justify-content-center">
+                  <div className="row justify-content-center ">
                     <div className="col-md-8">
                       <input
                         type="text"
@@ -788,40 +788,39 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <nav className="navbar navbar-expand-lg">
-        {/* Button to toggle navigation */}
-        <button className="navbar-toggler" type="button" onClick={() => setIsNavOpen(!isNavOpen)}>
-          <span className="navbar-toggler-icon"></span>
-        </button>
+      <div className="custom-navbar">
+        <nav className="navbar navbar-expand-lg">
+          {/* Button to toggle navigation */}
+          {/* <button className="navbar-toggler" type="button" onClick={() => setIsNavOpen(!isNavOpen)}>
+      <span className="navbar-toggler-icon"></span>
+    </button> */}
 
-        {/* Navigation links */}
-        <div className={`navbar-nav d-flex justify-content-between w-100 ${isNavOpen ? 'show' : ''}`}>
-          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab1' ? 'active' : ''}`} onClick={() => handleTabClick('tab1')}>
-            <button className="nav-link btn btn-link tab-button ">
-              <FontAwesomeIcon icon={faClock} className="rec" />
-            </button>
-            <span style={{marginRight:'20px'}}>Recents</span>
+          {/* Navigation links */}
+          <div className={`navbar-nav d-flex justify-content-between w-100 ${isNavOpen ? 'show' : ''} align-items-center`}>
+            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab1' ? 'active' : ''} col`} onClick={() => handleTabClick('tab1')}>
+              <button className="nav-link btn btn-link tab-button d-flex align-items-center justify-content-center">
+                <FontAwesomeIcon icon={faClock} className="rec" />
+              </button>
+            </div>
+            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab2' ? 'active' : ''} col`} onClick={() => handleTabClick('tab2')}>
+              <button className="nav-link  btn btn-link tab-button d-flex align-items-center justify-content-center">
+                <FontAwesomeIcon icon={faExclamation} className="imp" />
+              </button>
+            </div>
+            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab3' ? 'active' : ''} col`} onClick={() => handleTabClick('tab3')}>
+              <button className="nav-link  btn btn-link tab-button d-flex align-items-center justify-content-center">
+                <FontAwesomeIcon icon={faListSquares} className="imp" />
+              </button>
+            </div>
+            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab4' ? 'active' : ''} col`} onClick={() => handleTabClick('tab4')}>
+              <button className="nav-link  btn btn-link tab-button d-flex align-items-center justify-content-center">
+                <FontAwesomeIcon icon={faBookmark} className="imp" />
+              </button>
+            </div>
           </div>
-          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab2' ? 'active' : ''}`} onClick={() => handleTabClick('tab2')}>
-            <button className="nav-link  btn btn-link tab-button d-flex justify-content-between">
-              <FontAwesomeIcon  icon={faExclamation} className="imp" />
-            </button>
-            <span style={{marginRight:'20px'}}>Importants</span>
-          </div>
-          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab3' ? 'active' : ''}`} onClick={() => handleTabClick('tab3')}>
-            <button className="nav-link  btn btn-link tab-button d-flex justify-content-between">
-              <FontAwesomeIcon  icon={faListSquares} className="imp" />
-            </button>
-            <span style={{marginRight:'60px'}}>All</span>
-          </div>
-          <div className={`nav-item d-flex justify-content-between ${selectedTab === 'tab4' ? 'active' : ''}`} onClick={() => handleTabClick('tab4')}>
-            <button className="nav-link  btn btn-link tab-button d-flex justify-content-between">
-              <FontAwesomeIcon  icon={faBookmark} className="imp" />
-            </button>
-            <span style={{marginRight:'60px'}}>Collections</span>
-          </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
+
 
 
 
