@@ -36,9 +36,16 @@ const SharedCollectionPage = () => {
     //#endregion
     useEffect(() => {
         const userIdCookie = cookie.userId;
-        setUserId(userIdCookie)
+        if (userIdCookie == null || userIdCookie === '') {
+            const localUserId = localStorage.getItem('userId');
+            if (localUserId) {
+              setUserId(localUserId);
+            } 
+          } else {
+            setUserId(userIdCookie);
+          }
       }, [userId]);
-      console.log(userId);
+    //   console.log(userId);
 
     useEffect(() => {
         // Function to get the user's shared collection of links
@@ -106,7 +113,7 @@ const SharedCollectionPage = () => {
             "url": item.url,
             "user_id": userId
         });
-
+        history("../Dashboard");
     };
     const [showCollection, setShowCollection] = useState(false);
 

@@ -33,7 +33,14 @@ const SharedLinkPage = () => {
   //#endregion
   useEffect(() => {
     const userIdCookie = cookie.userId;
-    setUserId(userIdCookie)
+    if (userIdCookie == null || userIdCookie === '') {
+      const localUserId = localStorage.getItem('userId');
+      if (localUserId) {
+        setUserId(localUserId);
+      } 
+    } else {
+      setUserId(userIdCookie);
+    }
   }, [userId]);
   console.log(userId);
 

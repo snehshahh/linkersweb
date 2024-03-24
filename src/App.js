@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import LoginSignUp from './LoginSignUp';
@@ -10,16 +10,26 @@ import './App.css'
 
 function App() {
   const [cookies, setCookie] = useCookies(['userId']);
+  const [userId, setUserId] = useState('');
+
   useEffect(() => {
-    const userIdCookie = cookies.userId;
-    console.log("userIdCookie:", userIdCookie);
-  }, [cookies]);
+    let userIdCookie = cookies.userId;
+    if (userIdCookie == null || userIdCookie === '') {
+      const localUserId = localStorage.getItem('userId');
+      if (localUserId) {
+        setUserId(localUserId);
+      } 
+    } else {
+      setUserId(userIdCookie);
+    }
+  }, [cookies, setCookie]);
+
   return (
     <Router>
       <Routes>
         <Route
           path="/"
-          element={cookies?.userId ? <Navigate to="/Dashboard" /> : <Navigate to="/LoginSignUp" />}
+          element={ userId ? <Navigate to="/Dashboard" /> : <Navigate to="/LoginSignUp" />}
         />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
