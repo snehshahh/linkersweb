@@ -6,7 +6,8 @@ export default function Button({
   text, 
   className = "", 
   style = {}, 
-  type = "button" 
+  type = "button" ,
+  ...props
 }) {
   return (
     <button
@@ -14,6 +15,7 @@ export default function Button({
       type={type}
       className={`btn ${className}`}
       style={style}
+      {...props}
     >
       {icon && <span className="mr-2">{icon}</span>}
       {text}
