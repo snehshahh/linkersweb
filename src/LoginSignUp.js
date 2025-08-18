@@ -179,7 +179,7 @@ function SignUp() {
             {isSignUp && (
               <div className="form-group mt-2">
                 <label htmlFor="confirmPassword" style={{fontSize:'12px'}}>Confirm Password:</label>
-                <input
+                <Input
                   type="password"
                   className="form-control"
                   style={{ width: '100%' }}
