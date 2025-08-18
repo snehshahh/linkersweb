@@ -19,6 +19,7 @@ export default function Button({
     >
       {icon && <span className="mr-2">{icon}</span>}
       {text}
+      
     </button>
   );
 }
