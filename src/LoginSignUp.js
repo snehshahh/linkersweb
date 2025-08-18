@@ -7,6 +7,8 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from './components/Button/Button';
+import Input from './components/Input/Input';
 
 function SignUp() {
   const navigate = useNavigate(); // Change 'history' to 'navigate'
@@ -80,13 +82,13 @@ function SignUp() {
       return;
     }
 
-    if (!confirmPassword && isSignUp==true) {
+    if (!confirmPassword && isSignUp===true) {
       alert("Confirm Your Password");
       return;
     }
   
     // Check if password and confirm password match
-    if (password !== confirmPassword && isSignUp==true) {
+    if (password !== confirmPassword && isSignUp===true) {
       alert("Password and Confirm Password do not match");
       return;
     }
@@ -152,10 +154,10 @@ function SignUp() {
             </div>
             <div className="form-group mt-2 mb-2">
               <label htmlFor="password" style={{fontSize:'12px'}}>Email:</label>
-              <input
+              <Input
                 type="text"
                 className="form-control"
-                style={{ width: '100%' }}
+                style={{width: '100%'}}
                 placeholder="Email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -164,10 +166,10 @@ function SignUp() {
             </div>
             <div className="form-group mt-2">
               <label htmlFor="password" style={{fontSize:'12px'}}>Password:</label>
-              <input
+              <Input
                 type="password"
                 className="form-control"
-                style={{ width: '100%' }}
+                style={{width: '100%'}}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -189,9 +191,11 @@ function SignUp() {
               </div>
             )}
             <div className="text-center mt-2">
-              <button className="btn" onClick={handleLogin}>
-                {isSignUp ? 'Sign Up' : 'Login'}
-              </button>
+              <Button 
+                onClick={handleLogin}
+                className="btn"
+                text={isSignUp ? 'Sign Up' : 'Login'}
+                />
             </div>
             <p className="mt-3 text-center" onClick={toggleForm}>
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}
@@ -203,9 +207,11 @@ function SignUp() {
           <div className='belowsection'>
             <hr style={{width:'300px',margin:'0px auto 0px auto'}}/>
             <div className="text-center mt-3">
-              <button className="btn " onClick={signInWithGoogle}>
-                <FontAwesomeIcon icon={faGoogle} style={{ marginRight: '10px' }} /> Continue with Google
-              </button>
+              <Button
+                onClick={signInWithGoogle}
+                icon={<FontAwesomeIcon icon={faGoogle} style={{ marginRight: '10px' }} />}
+                text="Continue with Google"
+              />
             </div>
           </div>
         </div>
