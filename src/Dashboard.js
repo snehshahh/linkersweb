@@ -10,6 +10,8 @@ import { useCookies } from 'react-cookie';
 import { BeatLoader } from 'react-spinners';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation, faShare, faTrash, faPen, faCheck, faBookmark, faTimes, faPlus, faBoxOpen, faExternalLinkAlt, faFileAlt, faQuestionCircle, faClock, faListSquares, faPowerOff, faMinus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import Navbar from './components/Navbar/Navbar.jsx';
+import { useSelector, UseSelector } from 'react-redux';
 
 
 const Dashboard = () => {
@@ -665,27 +667,14 @@ const Dashboard = () => {
     alert("Copied To Clipboard!");
     // Optionally, you can provide user feedback or notifications about the successful copy
   };
-
-  const [selectedTab, setSelectedTab] = useState('tab1');
-  const [isNavOpen, setIsNavOpen] = useState(false);
-
-  const handleTabClick = (tab) => {
-    if (tab === 'tab4') {
-      setShowLinksForCollection(null);
-      setSelectedTab(tab);
-      setIsNavOpen(false); // Close the navigation when a tab is clicked
-    }
-    else {
-      setSelectedTab(tab);
-      setIsNavOpen(false); // Close the navigation when a tab is clicked
-    }
-  };
+  
   const [isSearchRecentVisible, setIsSearchRecentVisible] = useState(false);
   const [isSearchInportantVisible, setIsSearchImportantVisible] = useState(false);
   const [isSearchAllVisible, setIsSearchAllVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchRecentlink, setSearchRecentLink] = useState('');
   const [searchImplink, setImpSearchLink] = useState('');
+  const {selectedTab} = useSelector((state) => state.nav)
 
   // Function to filter links based on the search query
   const filteredLinks = links.filter((link) =>
@@ -788,41 +777,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="custom-navbar">
-        <nav className="navbar navbar-expand-lg">
-          {/* Button to toggle navigation */}
-          {/* <button className="navbar-toggler" type="button" onClick={() => setIsNavOpen(!isNavOpen)}>
-      <span className="navbar-toggler-icon"></span>
-    </button> */}
-
-          {/* Navigation links */}
-          <div className={`navbar-nav d-flex justify-content-between w-100 ${isNavOpen ? 'show' : ''} align-items-center`}>
-            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab1' ? 'active' : ''} col`} onClick={() => handleTabClick('tab1')}>
-              <button className="nav-link btn btn-link tab-button d-flex align-items-center justify-content-center">
-                <FontAwesomeIcon icon={faClock} className="rec" />
-              </button>
-            </div>
-            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab2' ? 'active' : ''} col`} onClick={() => handleTabClick('tab2')}>
-              <button className="nav-link  btn btn-link tab-button d-flex align-items-center justify-content-center">
-                <FontAwesomeIcon icon={faExclamation} className="imp" />
-              </button>
-            </div>
-            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab3' ? 'active' : ''} col`} onClick={() => handleTabClick('tab3')}>
-              <button className="nav-link  btn btn-link tab-button d-flex align-items-center justify-content-center">
-                <FontAwesomeIcon icon={faListSquares} className="imp" />
-              </button>
-            </div>
-            <div className={`nav-item d-flex flex-column align-items-center ${selectedTab === 'tab4' ? 'active' : ''} col`} onClick={() => handleTabClick('tab4')}>
-              <button className="nav-link  btn btn-link tab-button d-flex align-items-center justify-content-center">
-                <FontAwesomeIcon icon={faBookmark} className="imp" />
-              </button>
-            </div>
-          </div>
-        </nav>
-      </div>
-
-
-
+      <Navbar/>
 
       <div className="tab-content mt-3">
         <div className={`tab-content ${selectedTab === 'tab1' ? 'fade-in' : 'fade-out'}`}>
