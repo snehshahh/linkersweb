@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 const NavbarSlice = createSlice({
     name: 'nav',
     initialState: {isNavOpen : false,
-        selectedTab: 'tab1'
+        selectedTab: "tab1"
     },
     reducers:{
         toggleNav : (state,action) => {state.isNavOpen = action.payload},

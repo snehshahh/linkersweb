@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamation, faShare, faTrash, faPen, faCheck, faBookmark, faTimes, faPlus, faBoxOpen, faExternalLinkAlt, faFileAlt, faQuestionCircle, faClock, faListSquares, faPowerOff, faMinus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import Navbar from './components/Navbar/Navbar.jsx';
 import { useSelector, UseSelector } from 'react-redux';
+import { db, app } from './db/firebaseConfig.js';
 
 
 const Dashboard = () => {
@@ -19,18 +20,6 @@ const Dashboard = () => {
   //#region Friebase Config
   const navigate = useNavigate(); // Change 'history' to 'navigate'
 
-  const firebaseConfig = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID
-  };
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app); // Get the Firestore instance
-  //#endregion
 
   //#region  Variables and States
   const [links, setLinks] = useState([]);
@@ -781,11 +770,11 @@ const Dashboard = () => {
 
       <div className="tab-content mt-3">
         <div className={`tab-content ${selectedTab === 'tab1' ? 'fade-in' : 'fade-out'}`}>
-          {selectedTab === 'tab1' && (
+          {selectedTab === 'tab1' && ( // selectedTab,title
             <div>
               <div className="d-flex">
                 <div>
-                  <p className="tab-titles">Recents</p>
+                  <p className="tab-titles">Recents</p> 
                 </div>
                 <div>
                   <button className="btn mb-3 pr-4 mr-4" onClick={toggleSearchVisibility} style={{ marginLeft: '-30px', marginBottom: '10px' }}>
@@ -895,7 +884,7 @@ const Dashboard = () => {
                                           <button
                                             className="btn btn-outline"
                                             onClick={() => {
-                                              handleAddToCollection(link.id);
+                                              handleAddToCollection(link.id);//Redundunt
                                               handleSelectCollection(collection.id, link.id);
                                               close(); // Close the popup after selecting a collection
                                             }}

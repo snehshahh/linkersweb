@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const ShowLinksForCollectionSlice = createSlice({
     name: 'showlinkcollection',
-    initialState: {Collectionid : null,
+    initialState: {Collectionids : [],
     },
     reducers:{
-        setShowLinksForCollection : (state, action) => {state.Collectionid = action.payload}
+        setShowLinksForCollection : (state, action) => {(action.payload)?(state.Collectionids =  state.Collectionids.push(action.payload)):state.Collectionid = []}
     }
 });
 
