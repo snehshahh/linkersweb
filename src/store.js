@@ -7,7 +7,7 @@ export const store = configureStore({
     reducer: {
         nav : NavbarReducer,
         showlinkcollection : showlinkcollection,
-        isSearchBarVisible : toggleSearchBar,
+        SearchBarState : toggleSearchBar,
         linksState : linksReducer
 
 
